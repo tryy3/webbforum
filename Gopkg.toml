@@ -52,3 +52,7 @@
 [[constraint]]
   name = "github.com/spf13/viper"
   branch = "master"
+
+[[constraint]]
+  name = "github.com/volatiletech/authboss"
+  version = "1.2.0"

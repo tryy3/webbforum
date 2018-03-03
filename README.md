@@ -28,3 +28,7 @@ För att starta webbforumet.
 
 Om du skapade en databas med default namnet och inte har ändrat någon port/login så ska allt funka.
 Om du har ändrat något så ska en fil som heter `config.json` ha skapats där du kan ändra olika värden.
+
+## TODO
+ * Dokumentera alla funktioner
+ * Dokumentera säkerheten

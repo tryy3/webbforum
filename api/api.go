@@ -5,8 +5,8 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-// CreateAPI takes care of registering all of the API routes
-func CreateAPI(api *API, r *mux.Router) {
+// CreateAPIRoutes takes care of registering all of the API routes
+func CreateAPIRoutes(api *API, r *mux.Router) {
 
 }
 
