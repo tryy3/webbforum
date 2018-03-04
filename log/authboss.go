@@ -2,8 +2,9 @@ package log
 
 import (
 	"io"
+	"strings"
 
-	"github.com/labstack/gommon/log"
+	"github.com/apex/log"
 )
 
 func NewAuthbossLogger() io.Writer {
@@ -13,6 +14,6 @@ func NewAuthbossLogger() io.Writer {
 type AuthbossLogger struct{}
 
 func (a *AuthbossLogger) Write(p []byte) (int, error) {
-	log.Info(p)
+	log.Info(strings.TrimRight(string(p), "\n"))
 	return 0, nil
 }

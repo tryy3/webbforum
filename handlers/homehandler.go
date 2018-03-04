@@ -2,9 +2,10 @@ package handlers
 
 import (
 	"net/http"
-	"fmt"
 )
 
+// HomeHandler is the http handler for /
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Hello World")
+	data := LayoutData(w, r)
+	mustRender(w, r, "index", data)
 }

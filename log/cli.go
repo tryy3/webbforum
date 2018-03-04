@@ -28,11 +28,11 @@ var Colors = [...]*color.Color{
 
 // Strings mapping.
 var Strings = [...]string{
-	log.DebugLevel: "•",
-	log.InfoLevel:  "•",
-	log.WarnLevel:  "•",
-	log.ErrorLevel: "⨯",
-	log.FatalLevel: "⨯",
+	log.DebugLevel: "*",
+	log.InfoLevel:  "*",
+	log.WarnLevel:  "*",
+	log.ErrorLevel: "-",
+	log.FatalLevel: "-",
 }
 
 // CliHandler implementation.

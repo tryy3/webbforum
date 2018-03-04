@@ -1,24 +1,48 @@
 package main
 
 import (
-	"encoding/base64"
 	"fmt"
 	"os"
-	"time"
 
 	"github.com/apex/log"
-	"github.com/gorilla/securecookie"
 	"github.com/jinzhu/gorm"
 	"github.com/spf13/viper"
 	"github.com/tryy3/webbforum"
-	"github.com/tryy3/webbforum/api"
 	loghandler "github.com/tryy3/webbforum/log"
+	"github.com/tryy3/webbforum/models"
 	"github.com/tryy3/webbforum/utils"
 
 	_ "github.com/go-sql-driver/mysql"
 )
 
 func main() {
+	setupLogger()
+	configureViper()
+	defaultConfig()
+
+	if err := readConfig(); err != nil {
+		log.Fatal(fmt.Sprintf("error creating config: %s", err.Error()))
+	}
+
+	db, err := connectDatabase()
+	if err != nil {
+		log.Fatal(fmt.Sprintf("error connecting to database: %s", err.Error()))
+	}
+	db.LogMode(true)
+
+	err = setupDatabase(db)
+	if err != nil {
+		log.Fatal(fmt.Sprintf("error setup database: %s", err.Error()))
+	}
+
+	// start the http server
+	err = webbforum.StartServer(db)
+	if err != nil {
+		log.Fatal(fmt.Sprintf("error starting the server: %s", err.Error()))
+	}
+}
+
+func setupLogger() {
 	// handler for logging to file
 	file := loghandler.NewFile("log_%date%.log")
 
@@ -30,12 +54,16 @@ func main() {
 
 	// set default handler
 	log.SetHandler(handler)
+}
 
+func configureViper() {
 	// configure the config
 	viper.SetConfigName("config")
 	viper.AddConfigPath(".")
 	viper.SetConfigType("json")
+}
 
+func defaultConfig() {
 	// default config values
 	viper.SetDefault("database.host", "127.0.0.1")
 	viper.SetDefault("database.port", 3306)
@@ -48,85 +76,70 @@ func main() {
 
 	viper.SetDefault("xsrf.name", "csrf_token")
 
-	viper.SetDefault("cookie.key", securecookie.GenerateRandomKey(64))
+	viper.SetDefault("cookie.key", utils.GenerateRandomKey(64))
 	viper.SetDefault("cookie.expiry", 24*365)
 
-	viper.SetDefault("session.key", securecookie.GenerateRandomKey(64))
+	viper.SetDefault("session.key", utils.GenerateRandomKey(64))
 	viper.SetDefault("session.name", "ab_webbforum")
 
-	viper.SetDefault("smtp.host", "smtp.gmail.com:587")
+	viper.SetDefault("smtp.host", "smtp.gmail.com")
+	viper.SetDefault("smtp.port", 587)
 	viper.SetDefault("smtp.username", "example@gmail.com")
 	viper.SetDefault("smtp.password", "example_password")
 	viper.SetDefault("smtp.identity", "")
 	viper.SetDefault("smtp.email", "webbforum@gmail.com")
 	viper.SetDefault("smtp.name", "Webbforum Administrator")
 
+	viper.SetDefault("views.folder", "views")
+	viper.SetDefault("views.partials", "views/partials")
+}
+
+func readConfig() error {
 	// try to read the config
 	err := viper.ReadInConfig()
 	if err != nil {
 		// write to config if config file does not exists
 		err := viper.WriteConfigAs("config.json")
 		if err != nil {
-			log.Fatal(err.Error())
+			return err
 		}
 	}
+	return nil
+}
 
+func connectDatabase() (*gorm.DB, error) {
 	// connect to mysql database
-	db, err := gorm.Open("mysql", fmt.Sprintf("%s:%s@(%s:%d)/%s?parseTime=true",
+	db, err := gorm.Open("mysql", fmt.Sprintf("%s:%s@(%s:%d)/%s?parseTime=true&charset=utf8",
 		viper.GetString("database.username"),
 		viper.GetString("database.password"),
 		viper.GetString("database.host"),
 		viper.GetInt("database.port"),
 		viper.GetString("database.name")))
 	if err != nil {
-		log.Fatal(err.Error())
+		return nil, err
 	}
+	return db, err
+}
 
-	// generate cookie key
-	cookieKey, err := base64.StdEncoding.DecodeString(viper.GetString("cookie.key"))
-	if err != nil {
-		log.Fatal(err.Error())
+func setupDatabase(db *gorm.DB) error {
+	// auto migrate all of the models
+	db.AutoMigrate(&models.Category{})
+	db.AutoMigrate(&models.Group{})
+	db.AutoMigrate(&models.Permission{})
+	db.AutoMigrate(&models.Post{})
+	db.AutoMigrate(&models.Thread{})
+	db.AutoMigrate(&models.User{})
+	db.AutoMigrate(&models.Token{})
+
+	// insert default permissions, update if permission has changed
+	perms := models.DefaultPermission.Permissions()
+	tx := db.Begin()
+	for k, v := range perms {
+		err := tx.Set("gorm:insert_option", "ON DUPLICATE KEY UPDATE name = VALUES(name)").Create(&models.Permission{Bit: v, Name: k}).Error
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
 	}
-
-	// generate session key
-	sessionKey, err := base64.StdEncoding.DecodeString(viper.GetString("session.key"))
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-
-	// create context Config
-	config := &utils.Config{
-		HTTPIP:   viper.GetString("http.host"),
-		HTTPPort: viper.GetInt("http.port"),
-
-		XSRFName: viper.GetString("xsrf.name"),
-
-		CookieStoreKey: cookieKey,
-		CookieExpiry:   time.Duration(viper.GetInt64("cookie.expiry")) * time.Hour,
-
-		SessionStoreKey: sessionKey,
-		SessionName:     viper.GetString("session.name"),
-
-		SMTPHost:     viper.GetString("smtp.host"),
-		SMTPUsername: viper.GetString("smtp.username"),
-		SMTPPassword: viper.GetString("smtp.password"),
-		SMTPIdentity: viper.GetString("smtp.identity"),
-		SMTPEmail:    viper.GetString("smtp.email"),
-		SMTPName:     viper.GetString("smtp.name"),
-	}
-
-	// create context object
-	context := &utils.Context{
-		Config:   config,
-		Database: db,
-	}
-
-	// create the API
-	a, err := api.NewAPI(context.Database)
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-
-	// start the http server
-	webbforum.StartServer(context, a)
+	return tx.Commit().Error
 }

@@ -42,7 +42,9 @@ func (m *CookieManager) NewCookieStorer(w http.ResponseWriter, r *http.Request) 
 func (s CookieStorer) Get(key string) (string, bool) {
 	cookie, err := s.r.Cookie(key)
 	if err != nil {
-		log.Error(err.Error())
+		if err.Error() != "http: named cookie not present" {
+			log.Error(err.Error())
+		}
 		return "", false
 	}
 
