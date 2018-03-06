@@ -36,6 +36,7 @@ func StartServer(db *gorm.DB) error {
 
 	// setup the routes
 	r.PathPrefix("/auth").Handler(ab.NewRouter())
+	r.PathPrefix("/admin").Methods("GET").HandlerFunc(handlers.AdminHandler)
 	r.PathPrefix("/").Methods("GET").HandlerFunc(handlers.HomeHandler)
 
 	// NotFoundHandler
