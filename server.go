@@ -34,10 +34,14 @@ func StartServer(db *gorm.DB) error {
 	// initialize the mux router
 	r := mux.NewRouter()
 
+	gets := r.Methods("GET").Subrouter()
+
 	// setup the routes
 	r.PathPrefix("/auth").Handler(ab.NewRouter())
-	r.PathPrefix("/admin").Methods("GET").HandlerFunc(handlers.AdminHandler)
-	r.PathPrefix("/").Methods("GET").HandlerFunc(handlers.HomeHandler)
+
+	gets.PathPrefix("/admin").HandlerFunc(handlers.AdminHandler)
+	gets.PathPrefix("/profile/{username}").Handler(middleware.LoggedInProtect(handlers.NewProfileHandler(), ab))
+	gets.PathPrefix("/").HandlerFunc(handlers.HomeHandler)
 
 	// NotFoundHandler
 	r.NotFoundHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -46,7 +50,7 @@ func StartServer(db *gorm.DB) error {
 	})
 
 	// set up the middleware chain
-	stack := alice.New(middleware.NoSurfingMiddleware, ab.ExpireMiddleware).Then(r)
+	stack := alice.New(middleware.Logging, middleware.NoSurfingMiddleware, ab.ExpireMiddleware).Then(r)
 
 	// create the http server
 	srv := &http.Server{

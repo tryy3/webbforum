@@ -19,7 +19,7 @@ var bold = color.New(color.Bold)
 
 // Colors mapping.
 var Colors = [...]*color.Color{
-	log.DebugLevel: color.New(color.FgWhite),
+	log.DebugLevel: color.New(color.FgHiCyan),
 	log.InfoLevel:  color.New(color.FgGreen),
 	log.WarnLevel:  color.New(color.FgYellow),
 	log.ErrorLevel: color.New(color.FgRed),
@@ -28,7 +28,7 @@ var Colors = [...]*color.Color{
 
 // Strings mapping.
 var Strings = [...]string{
-	log.DebugLevel: "*",
+	log.DebugLevel: "^",
 	log.InfoLevel:  "*",
 	log.WarnLevel:  "*",
 	log.ErrorLevel: "-",

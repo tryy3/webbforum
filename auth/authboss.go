@@ -35,7 +35,7 @@ func SetupAuthboss(db *gorm.DB) (*authboss.Authboss, error) {
 	// set general configurations
 	ab.Storer = Storer{db: db}
 	ab.MountPath = "/auth"
-	ab.ViewsPath = "ab_views" // TODO: Try this out
+	ab.ViewsPath = "ab_views"
 	ab.LogWriter = log.NewAuthbossLogger()
 	ab.RootURL = fmt.Sprintf("http://%s:%d", viper.GetString("http.host"), viper.GetInt("http.port"))
 

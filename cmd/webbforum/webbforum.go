@@ -54,6 +54,7 @@ func setupLogger() {
 
 	// set default handler
 	log.SetHandler(handler)
+	log.SetLevel(log.DebugLevel)
 }
 
 func configureViper() {
