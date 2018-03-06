@@ -1,9 +1,6 @@
 package auth
 
 import (
-	"fmt"
-
-	"github.com/davecgh/go-spew/spew"
 	"github.com/jinzhu/gorm"
 	"github.com/tryy3/webbforum/models"
 	"github.com/volatiletech/authboss"
@@ -49,9 +46,6 @@ func (s Storer) Put(key string, attr authboss.Attributes) error {
 func (s Storer) Get(key string) (interface{}, error) {
 	var user models.User
 	result := s.db.Where("username = ?", key).First(&user)
-	fmt.Println(result.RecordNotFound())
-	fmt.Println(result.Error)
-	spew.Dump(user)
 	if result.RecordNotFound() {
 		return nil, authboss.ErrUserNotFound
 	}

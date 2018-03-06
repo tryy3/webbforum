@@ -12,7 +12,6 @@ import (
 
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
-	"github.com/jinzhu/gorm"
 	"github.com/justinas/nosurf"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
@@ -28,12 +27,12 @@ import (
 )
 
 // SetupAuthboss creates a new Authboss instance with everything configured
-func SetupAuthboss(db *gorm.DB) (*authboss.Authboss, error) {
+func SetupAuthboss(storer authboss.Storer) (*authboss.Authboss, error) {
 	// initialize authboss
 	ab := authboss.New()
 
 	// set general configurations
-	ab.Storer = Storer{db: db}
+	ab.Storer = storer
 	ab.MountPath = "/auth"
 	ab.ViewsPath = "ab_views"
 	ab.LogWriter = log.NewAuthbossLogger()

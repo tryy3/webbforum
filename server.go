@@ -25,8 +25,10 @@ func StartServer(db *gorm.DB) error {
 		return errors.Wrap(err, "error when loading templates")
 	}
 
+	storer := auth.New(db)
+
 	// setup authboss
-	ab, err := auth.SetupAuthboss(db)
+	ab, err := auth.SetupAuthboss(storer)
 	if err != nil {
 		return errors.Wrap(err, "error setting up authboss")
 	}
@@ -39,9 +41,9 @@ func StartServer(db *gorm.DB) error {
 	// setup the routes
 	r.PathPrefix("/auth").Handler(ab.NewRouter())
 
-	gets.PathPrefix("/admin").HandlerFunc(handlers.AdminHandler)
-	gets.PathPrefix("/profile/{username}").Handler(middleware.LoggedInProtect(handlers.NewProfileHandler(), ab))
-	gets.PathPrefix("/").HandlerFunc(handlers.HomeHandler)
+	gets.Handle("/profile/{username}", handlers.NewProfileHandler(storer))
+	gets.HandleFunc("/admin", handlers.AdminHandler)
+	gets.HandleFunc("/", handlers.HomeHandler)
 
 	// NotFoundHandler
 	r.NotFoundHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

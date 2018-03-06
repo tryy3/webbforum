@@ -33,22 +33,23 @@ func (p PermissionProtector) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 type LoggedInProtector struct {
-	f  http.Handler
+	h  http.Handler
 	ab *authboss.Authboss
 }
 
-func LoggedInProtect(f http.Handler, ab *authboss.Authboss) http.Handler {
-	return LoggedInProtector{f, ab}
+func LoggedInProtect(h http.Handler, ab *authboss.Authboss) http.Handler {
+	return LoggedInProtector{h, ab}
 }
 
 func (p LoggedInProtector) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if u, err := p.ab.CurrentUser(w, r); err != nil {
+	u, err := p.ab.CurrentUser(w, r)
+	if err != nil {
 		log.WithError(err).Error("error fetching current user")
 		w.WriteHeader(http.StatusInternalServerError)
 	} else if u == nil {
 		log.Errorf("redirecting unauthorized user from: %s", r.URL.Path)
 		http.Redirect(w, r, "/", http.StatusFound)
 	} else {
-		p.ServeHTTP(w, r)
+		p.h.ServeHTTP(w, r)
 	}
 }

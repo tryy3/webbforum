@@ -1,6 +1,10 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"github.com/volatiletech/authboss"
+)
 
 // User is the database model of a user
 type User struct {
@@ -36,4 +40,10 @@ type User struct {
 	// Extra filled by gorm
 	CreatedAt time.Time
 	UpdatedAt time.Time
+}
+
+type UserStorer interface {
+	Create(key string, attr authboss.Attributes) error
+	Put(key string, attr authboss.Attributes) error
+	Get(key string) (interface{}, error)
 }
