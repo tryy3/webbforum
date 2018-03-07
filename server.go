@@ -37,11 +37,15 @@ func StartServer(db *gorm.DB) error {
 	r := mux.NewRouter()
 
 	gets := r.Methods("GET").Subrouter()
+	posts := r.Methods("POST").Subrouter()
 
 	// setup the routes
 	r.PathPrefix("/auth").Handler(ab.NewRouter())
 
-	gets.Handle("/profile/{username}", handlers.NewProfileHandler(storer))
+	posts.Handle("/profil", middleware.LoggedInProtect(handlers.NewProfileEditHandler(storer, ab), ab))
+
+	gets.Handle("/medlem/{username}", handlers.NewMemberHandler(storer))
+	gets.Handle("/profil", middleware.LoggedInProtect(handlers.NewProfileHandler(ab), ab))
 	gets.HandleFunc("/admin", handlers.AdminHandler)
 	gets.HandleFunc("/", handlers.HomeHandler)
 

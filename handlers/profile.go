@@ -6,30 +6,51 @@ import (
 	"github.com/davecgh/go-spew/spew"
 	"github.com/gorilla/mux"
 	"github.com/tryy3/webbforum/models"
+	"github.com/volatiletech/authboss"
+	"github.com/apex/log"
 )
 
 type ProfileHandler struct {
-	store models.UserStorer
+	ab *authboss.Authboss
 }
 
-func NewProfileHandler(store models.UserStorer) http.Handler {
-	return ProfileHandler{store}
+func NewProfileHandler(ab *authboss.Authboss) http.Handler {
+	return ProfileHandler{ab}
 }
 
-func (a ProfileHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	data := LayoutData(w, r)
-	username, ok := mux.Vars(r)["username"]
+func (p ProfileHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	u, ok := getUser(w, r, p.ab)
 	if !ok {
-		mustRender(w, r, "profile", data)
+		return
+	}
+	data := LayoutData(w, r).MergeKV("user", u)
+	mustRender(w, r, "profil", data)
+}
+
+type ProfileEditHandler struct {
+	storer models.UserStorer
+	ab *authboss.Authboss
+}
+
+func NewProfileEditHandler(storer models.UserStorer, ab *authboss.Authboss) ProfileEditHandler {
+	return ProfileEditHandler{storer, ab}
+}
+
+func (p ProfileEditHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	u, ok := getUser(w, r, p.ab)
+	if !ok {
 		return
 	}
 
-	user, err := a.store.Get(username)
-	if err == nil {
-		data.MergeKV("user", user)
+	ab, err := authboss.AttributesFromRequest(r)
+	if badRequest(w, err) {
+		return
 	}
 
-	spew.Dump(user)
+	err = p.storer.Put(u.(*models.User).Username, ab)
+	if badRequest(w, err) {
+		return
+	}
 
-	mustRender(w, r, "profile", data)
+	http.Redirect(w, r, r.RequestURI, http.StatusFound)
 }
