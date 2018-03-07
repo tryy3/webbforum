@@ -90,7 +90,7 @@ func SetupAuthboss(storer authboss.Storer) (*authboss.Authboss, error) {
 		viper.GetString("smtp.identity"),
 		viper.GetString("smtp.username"),
 		viper.GetString("smtp.password"),
-		"smtp.gmail.com",
+		viper.GetString("smtp.host"),
 	))
 	ab.EmailFrom = viper.GetString("smtp.email")
 	ab.EmailFromName = viper.GetString("smtp.name")
