@@ -3,11 +3,8 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/davecgh/go-spew/spew"
-	"github.com/gorilla/mux"
 	"github.com/tryy3/webbforum/models"
 	"github.com/volatiletech/authboss"
-	"github.com/apex/log"
 )
 
 type ProfileHandler struct {

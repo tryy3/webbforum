@@ -3,7 +3,6 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/gorilla/mux"
 	"github.com/tryy3/webbforum/models"
 )
