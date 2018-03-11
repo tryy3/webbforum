@@ -37,19 +37,39 @@ func StartServer(db *gorm.DB) error {
 	// initialize the mux router
 	r := mux.NewRouter()
 
-	gets := r.Methods("GET").Subrouter()
-	posts := r.Methods("POST").Subrouter()
-
 	// setup the routes
 	r.PathPrefix("/auth").Handler(ab.NewRouter())
 
-	gets.Handle("/anvandare/{username}", handlers.NewMemberHandler(storer))
-	gets.Handle("/profil", middleware.LoggedInProtect(handlers.NewProfileHandler(ab), ab))
-	gets.HandleFunc("/admin", handlers.AdminHandler)
-	gets.HandleFunc("/", handlers.HomeHandler)
+	r.Methods("GET").
+		PathPrefix("/anvandare/{username}").
+		Handler(handlers.NewMemberHandler(storer))
 
-	posts.Handle("/profil/upload", middleware.LoggedInProtect(handlers.NewProfileUploadHandler(db, ab), ab))
-	posts.Handle("/profil", middleware.LoggedInProtect(handlers.NewProfileEditHandler(storer, ab), ab))
+	r.Methods("GET").
+		PathPrefix("/profil").
+		Handler(middleware.LoggedInProtect(handlers.NewProfileHandler(ab), ab))
+	r.Methods("POST").
+		PathPrefix("/profil/upload").
+		Handler(middleware.LoggedInProtect(handlers.NewProfileUploadHandler(db, ab), ab))
+	r.Methods("POST").
+		PathPrefix("/profil").
+		Handler(middleware.LoggedInProtect(handlers.NewProfileEditHandler(storer, ab), ab))
+
+	r.Methods("GET").
+		PathPrefix("/admin").
+		Handler(handlers.AdminHandler{db})
+	r.Methods("POST").
+		PathPrefix("/admin/kategori/skapa").
+		Handler(handlers.CategoryCreateHandler{db})
+	r.Methods("POST").
+		PathPrefix("/admin/kategori/uppdatera").
+		Handler(handlers.CategoryEditHandler{db})
+	r.Methods("POST").
+		PathPrefix("/admin/kategori/ta_bort").
+		Handler(handlers.CategoryDeleteHandler{db})
+
+	r.Methods("GET").
+		PathPrefix("/").
+		HandlerFunc(handlers.HomeHandler)
 
 	// serve image folder
 	imageFolder := filepath.Join(viper.GetString("content.base"), viper.GetString("content.image.folder"))

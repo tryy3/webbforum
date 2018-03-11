@@ -6,7 +6,6 @@ import (
 	"path/filepath"
 
 	"github.com/apex/log"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/jinzhu/gorm"
 	"github.com/spf13/viper"
 	"github.com/tryy3/webbforum/fileutils"
@@ -77,17 +76,8 @@ func (p ProfileEditHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// get a slice of all the keys from attributes
-	keys := make([]string, len(ab))
-	i := 0
-	for k := range ab {
-		keys[i] = k
-		i++
-	}
-
 	// attempt to validate the request
 	errs := authboss.Validate(r, profileEditValidators)
-	spew.Dump(errs)
 	if len(errs) > 0 {
 		data.MergeKV("errs", errs.Map(), "user", u)
 		mustRender(w, r, "profil", data)

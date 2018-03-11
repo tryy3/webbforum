@@ -1,39 +1,83 @@
 {{define "pagetitle"}}admin - Index{{end}}
 
-{{$loggedin := .loggedin}}
-{{if $loggedin}}
-<div class="row" style="margin-bottom: 20px;">
-	<div class="col-md-offset-9 col-md-2 text-right">
-		<a class="btn btn-primary" href="/blogs/new"><i class="fa fa-plus"></i> New Post</a>	
-	</div>
-</div>
-{{end}}
-
 <div class="row">
 	<div class="col-md-offset-1 col-md-10">
-		{{range .posts}}
-		<div class="panel panel-info">
-			<div class="panel-heading">
-				<div class="row">
-					<div class="col-md-6">{{.Title}}</div>
-					<div class="col-md-6 text-right">
-						{{if $loggedin}}
-						<a class="btn btn-xs btn-link" href="/blogs/{{.ID}}/edit">Edit</a>
-						<a class="btn btn-xs btn-link" href="/blogs/{{.ID}}/destroy">Delete</a>
-						{{end}}
-					</div>
-				</div>
-			</div>
-			<div class="panel-body">{{.Content}}</div>
-			<div class="panel-footer">
-				<div class="row">
-					<div class="col-md-6">By {{.AuthorID}}</div>
-					<div class="col-md-6 text-right">Posted on {{formatDate .Date}}</div>
-				</div>
-			</div>
-		</div>
-		{{end}}
+        {{if .error}}
+            <div class="alert alert-danger">{{.error}}</div>
+        {{end}}
+        <form action="/admin/kategori/skapa" method="post">
+            <input type="hidden" name="csrf_token" value="{{.csrf_token}}" />
+            <div class="form-group {{with .errs}}{{with $errlist := index . "category_name"}}has-error{{end}}{{end}}">
+                <input type="text" class="form-control" name="category_name" placeholder="Namn" value="{{.category.Name}}" />
+            {{with .errs}}{{with $errlist := index . "category_name"}}{{range $errlist}}<span class="help-block">{{.}}</span>{{end}}{{end}}{{end}}
+            </div>
+            <div class="form-group {{with .errs}}{{with $errlist := index . "category_description"}}has-error{{end}}{{end}}">
+                <input type="text" class="form-control" name="category_description" placeholder="Beskrivning" value="{{.category.Description}}" />
+            {{with .errs}}{{with $errlist := index . "category_description"}}{{range $errlist}}<span class="help-block">{{.}}</span>{{end}}{{end}}{{end}}
+            </div>
+            <div class="row">
+                <div class="col-md-offset-1 col-md-10">
+                    <button class="btn btn-primary btn-block" type="submit">Skapa en ny kategori</button>
+                </div>
+            </div>
+        </form>
+
+        <br>
+        <br>
+        <br>
+        <br>
+
+        {{$csrf_token := .csrf_token}}
+        {{$catErrs := .category_errs}}
+        {{$cat := .category_edit}}
+
+        {{range $index, $category := .categories}}
+            {{with $cat}}
+                {{if eq $cat.ID $category.ID}}
+                    {{template "category_edit" map "category" $cat "csrf_token" $csrf_token "errs" $catErrs}}
+                {{else}}
+                    {{template "category_edit" map "category" $category "csrf_token" $csrf_token}}
+                {{end}}
+            {{else}}
+                {{template "category_edit" map "category" $category "csrf_token" $csrf_token}}
+            {{end}}
+
+            {{template "category_delete" map "category" $category "csrf_token" $csrf_token}}
+        {{else}}
+            <h3>No categories found</h3>
+        {{end}}
+
+        {{define "category_edit"}}
+            <form action="/admin/kategori/uppdatera" method="post">
+                <input type="hidden" name="csrf_token" value="{{.csrf_token}}" />
+                <input type="hidden" name="category_id" value="{{.category.ID}}" />
+                <div class="form-group {{with .errs}}{{with $errlist := index . "category_name"}}has-error{{end}}{{end}}">
+                    <input type="text" class="form-control" name="category_name" placeholder="Namn" value="{{.category.Name}}" />
+                {{with .errs}}{{with $errlist := index . "category_name"}}{{range $errlist}}<span class="help-block">{{.}}</span>{{end}}{{end}}{{end}}
+                </div>
+                <div class="form-group {{with .errs}}{{with $errlist := index . "category_description"}}has-error{{end}}{{end}}">
+                    <input type="text" class="form-control" name="category_description" placeholder="Beskrivning" value="{{.category.Description}}" />
+                {{with .errs}}{{with $errlist := index . "category_description"}}{{range $errlist}}<span class="help-block">{{.}}</span>{{end}}{{end}}{{end}}
+                </div>
+                <div class="row">
+                    <div class="col-md-offset-1 col-md-10">
+                        <button class="btn btn-primary btn-block" type="submit">Uppdatera kategorin</button>
+                    </div>
+                </div>
+            </form>
+        {{end}}
+
+        {{define "category_delete"}}
+            <form action="/admin/kategori/ta_bort" method="post">
+                <input type="hidden" name="csrf_token" value="{{.csrf_token}}" />
+                <input type="hidden" name="category_id" value="{{.category.ID}}" />
+                <h3>{{.category.Name}}</h3>
+                <div class="row">
+                    <div class="col-md-offset-1 col-md-10">
+                        <button class="btn btn-primary btn-block" type="submit" name="delete">Ta bort kategori</button>
+                    </div>
+                </div>
+            </form>
+        {{end}}
 	</div>
 </div>
-
-{{.}}

@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"errors"
 	"fmt"
 	"html/template"
 	"net/http"
@@ -19,6 +20,21 @@ var LayoutFuncs = template.FuncMap{
 		return date.Format("2006/01/02 03:04pm")
 	},
 	"yield": func() string { return "" },
+	"map": func(values ...interface{}) (map[string]interface{}, error) {
+		if len(values)%2 != 0 {
+			return nil, errors.New("invalid map call")
+		}
+
+		m := make(map[string]interface{}, len(values)/2)
+		for i := 0; i < len(values); i += 2 {
+			key, ok := values[i].(string)
+			if !ok {
+				return nil, errors.New("map keys must be strings")
+			}
+			m[key] = values[i+1]
+		}
+		return m, nil
+	},
 }
 
 var (
