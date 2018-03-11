@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"path/filepath"
 	"time"
 
 	"github.com/aarondl/tpl"
@@ -42,12 +43,17 @@ func StartServer(db *gorm.DB) error {
 	// setup the routes
 	r.PathPrefix("/auth").Handler(ab.NewRouter())
 
-	posts.Handle("/profil", middleware.LoggedInProtect(handlers.NewProfileEditHandler(storer, ab), ab))
-
-	gets.Handle("/medlem/{username}", handlers.NewMemberHandler(storer))
+	gets.Handle("/anvandare/{username}", handlers.NewMemberHandler(storer))
 	gets.Handle("/profil", middleware.LoggedInProtect(handlers.NewProfileHandler(ab), ab))
 	gets.HandleFunc("/admin", handlers.AdminHandler)
 	gets.HandleFunc("/", handlers.HomeHandler)
+
+	posts.Handle("/profil/upload", middleware.LoggedInProtect(handlers.NewProfileUploadHandler(db, ab), ab))
+	posts.Handle("/profil", middleware.LoggedInProtect(handlers.NewProfileEditHandler(storer, ab), ab))
+
+	// serve image folder
+	imageFolder := filepath.Join(viper.GetString("content.base"), viper.GetString("content.image.folder"))
+	r.PathPrefix("/images/").Handler(http.StripPrefix("/images", http.FileServer(http.Dir(imageFolder))))
 
 	// NotFoundHandler
 	r.NotFoundHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

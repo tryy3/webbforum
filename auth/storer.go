@@ -52,6 +52,7 @@ func (s Storer) Get(key string) (interface{}, error) {
 	if result.Error != nil {
 		return nil, result.Error
 	}
+
 	return &user, nil
 }
 

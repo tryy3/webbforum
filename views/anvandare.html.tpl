@@ -17,7 +17,7 @@
             </tr>
             <tr>
                 <td>Profile Image</td>
-                <td>{{.user.ProfileImage}}</td>
+                <td><img src="{{.user.ProfileImageURL}}" /></td>
             </tr>
             <tr>
                 <td>Description</td>

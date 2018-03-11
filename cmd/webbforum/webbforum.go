@@ -93,6 +93,11 @@ func defaultConfig() {
 
 	viper.SetDefault("views.folder", "views")
 	viper.SetDefault("views.partials", "views/partials")
+
+	viper.SetDefault("content.base", "content")
+	viper.SetDefault("content.tmp", "tmp")
+	viper.SetDefault("content.image.folder", "image")
+	viper.SetDefault("content.image.size", 10*1024*1024) // 10 MB
 }
 
 func readConfig() error {
@@ -119,6 +124,8 @@ func connectDatabase() (*gorm.DB, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	db = db.Set("gorm:auto_preload", true)
 	return db, err
 }
 
@@ -131,6 +138,7 @@ func setupDatabase(db *gorm.DB) error {
 	db.AutoMigrate(&models.Thread{})
 	db.AutoMigrate(&models.User{})
 	db.AutoMigrate(&models.Token{})
+	db.AutoMigrate(&models.File{})
 
 	// insert default permissions, update if permission has changed
 	perms := models.DefaultPermission.Permissions()

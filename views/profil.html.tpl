@@ -6,25 +6,36 @@
             <div class="alert alert-danger">{{.error}}</div>
         {{end}}
         <form method="POST">
+            <input type="hidden" name="csrf_token" value="{{.csrf_token}}" />
             <div class="form-group {{with .errs}}{{with $errlist := index . "email"}}has-error{{end}}{{end}}">
                 <input type="text" class="form-control" name="email" placeholder="Email" value="{{.user.Email}}" />
             {{with .errs}}{{with $errlist := index . "email"}}{{range $errlist}}<span class="help-block">{{.}}</span>{{end}}{{end}}{{end}}
             </div>
             <div class="form-group {{with .errs}}{{with $errlist := index . "first_name"}}has-error{{end}}{{end}}">
-                <input type="text" class="form-control" name="first_name" placeholder="First name" value="{{.user.FirstName}}" />
+                <input type="text" class="form-control" name="first_name" placeholder="Namn" value="{{.user.FirstName}}" />
             {{with .errs}}{{with $errlist := index . "first_name"}}{{range $errlist}}<span class="help-block">{{.}}</span>{{end}}{{end}}{{end}}
             </div>
             <div class="form-group {{with .errs}}{{with $errlist := index . "last_name"}}has-error{{end}}{{end}}">
-                <input type="text" class="form-control" name="last_name" placeholder="Last name" value="{{.user.LastName}}" />
+                <input type="text" class="form-control" name="last_name" placeholder="Efter namn" value="{{.user.LastName}}" />
             {{with .errs}}{{with $errlist := index . "last_name"}}{{range $errlist}}<span class="help-block">{{.}}</span>{{end}}{{end}}{{end}}
             </div>
             <div class="form-group {{with .errs}}{{with $errlist := index . "description"}}has-error{{end}}{{end}}">
-                <input type="text" class="form-control" name="description" placeholder="Description" value="{{.user.Description}}" />
+                <input type="text" class="form-control" name="description" placeholder="Beskrivning" value="{{.user.Description}}" />
             {{with .errs}}{{with $errlist := index . "description"}}{{range $errlist}}<span class="help-block">{{.}}</span>{{end}}{{end}}{{end}}
             </div>
             <div class="row">
                 <div class="col-md-offset-1 col-md-10">
-                    <button class="btn btn-primary btn-block" type="submit">Register</button>
+                    <button class="btn btn-primary btn-block" type="submit">Updatera information</button>
+                </div>
+            </div>
+        </form>
+
+        <form action="/profil/upload" enctype="multipart/form-data" method="POST">
+            <input type="file" name="uploadfile" />
+            <input type="hidden" name="csrf_token" value="{{.csrf_token}}" />
+            <div class="row">
+                <div class="col-md-offset-1 col-md-10">
+                    <button class="btn btn-primary btn-block" type="submit">Ladda upp bilden</button>
                 </div>
             </div>
         </form>

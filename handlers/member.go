@@ -7,6 +7,7 @@ import (
 	"github.com/tryy3/webbforum/models"
 )
 
+// MemberHandler handles serving of the /anvandare page
 type MemberHandler struct {
 	store models.UserStorer
 }
@@ -23,10 +24,27 @@ func (a MemberHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := a.store.Get(username)
+	u, err := a.store.Get(username)
 	if err == nil {
-		data.MergeKV("user", user)
+		u = setImageProfile(u)
+		data.MergeKV("user", u)
 	}
 
-	mustRender(w, r, "medlem", data)
+	mustRender(w, r, "anvandare", data)
+}
+
+// setImageProfile will attempt to set the ProfileImageURL if ProfileImage exists on the user
+func setImageProfile(u interface{}) interface{} {
+	user, ok := u.(*models.User)
+	if !ok {
+		return u
+	}
+
+	if user.ProfileImage == nil {
+		return u
+	}
+
+	profileURL := "/images/" + user.ProfileImage.Base64Hash
+	user.ProfileImageURL = profileURL
+	return user
 }
