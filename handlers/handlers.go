@@ -35,14 +35,28 @@ func getUser(w http.ResponseWriter, r *http.Request, ab *authboss.Authboss) (int
 }
 
 func getCategoryID(attr authboss.Attributes) (uint, string) {
-	idStr, ok := attr.String("category_id");
+	idStr, ok := attr.String("category_id")
 	if !ok {
 		return 0, "missing category ID"
 	}
 
-	id, err := strconv.ParseUint(idStr, 32, 10);
+	id, err := strconv.ParseUint(idStr, 32, 10)
 	if err != nil {
 		return 0, "category ID is a not valid number"
+	}
+
+	return uint(id), ""
+}
+
+func getThreadID(attr authboss.Attributes) (uint, string) {
+	idStr, ok := attr.String("thread_id")
+	if !ok {
+		return 0, "missing thread ID"
+	}
+
+	id, err := strconv.ParseUint(idStr, 32, 10)
+	if err != nil {
+		return 0, "thread ID is a not valid number"
 	}
 
 	return uint(id), ""

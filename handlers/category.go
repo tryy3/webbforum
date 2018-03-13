@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/apex/log"
 	"github.com/jinzhu/gorm"
@@ -134,29 +133,17 @@ func (c CategoryDeleteHandler) ServeHTTP(w http.ResponseWriter, r *http.Request)
 	}
 
 	var category models.Category
-	if idStr, ok := attr.String("category_id"); !ok {
-		categoryErr := "missing category ID"
-		data, errStr := serveAdminPage(c.Database, data)
-		if errStr != "" {
-			categoryErr += "<br>" + errStr
+	id, errStr := getCategoryID(attr)
+	if errStr != "" {
+		data, serveErr := serveAdminPage(c.Database, data)
+		if serveErr != "" {
+			errStr += "<br>" + serveErr
 		}
-		data = data.MergeKV("error", categoryErr)
+		data = data.MergeKV("error", errStr)
 		mustRender(w, r, "admin", data)
 		return
-	} else {
-		if id, err := strconv.ParseUint(idStr, 32, 10); err != nil {
-			categoryErr := "category ID is a not valid number"
-			data, errStr := serveAdminPage(c.Database, data)
-			if errStr != "" {
-				categoryErr += "<br>" + errStr
-			}
-			data = data.MergeKV("error", categoryErr)
-			mustRender(w, r, "admin", data)
-			return
-		} else {
-			category.ID = uint(id)
-		}
 	}
+	category.ID = id
 
 	err = c.Database.Delete(&category).Error
 	if err != nil {
