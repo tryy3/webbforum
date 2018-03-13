@@ -8,11 +8,11 @@ type Thread struct {
 
 	// CreatedBy
 	CreatedByID uint
-	CreatedBy   User
+	CreatedBy   *User
 
 	// Category
 	CategoryID uint
-	Category   Category
+	Category   *Category
 
 	// Extra filled by gorm
 	CreatedAt time.Time

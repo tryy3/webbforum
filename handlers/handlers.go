@@ -2,6 +2,8 @@ package handlers
 
 import (
 	"net/http"
+	"strconv"
+
 	"github.com/apex/log"
 	"github.com/volatiletech/authboss"
 )
@@ -30,4 +32,18 @@ func getUser(w http.ResponseWriter, r *http.Request, ab *authboss.Authboss) (int
 		return nil, false
 	}
 	return u, true
+}
+
+func getCategoryID(attr authboss.Attributes) (uint, string) {
+	idStr, ok := attr.String("category_id");
+	if !ok {
+		return 0, "missing category ID"
+	}
+
+	id, err := strconv.ParseUint(idStr, 32, 10);
+	if err != nil {
+		return 0, "category ID is a not valid number"
+	}
+
+	return uint(id), ""
 }

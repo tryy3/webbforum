@@ -67,9 +67,13 @@ func StartServer(db *gorm.DB) error {
 		PathPrefix("/admin/kategori/ta_bort").
 		Handler(handlers.CategoryDeleteHandler{db})
 
+	r.Methods("POST").
+		PathPrefix("/trad/skapa").
+		Handler(handlers.ThreadCreateHandler{db, ab})
+
 	r.Methods("GET").
 		PathPrefix("/").
-		HandlerFunc(handlers.HomeHandler)
+		Handler(handlers.HomeHandler{Database:db})
 
 	// serve image folder
 	imageFolder := filepath.Join(viper.GetString("content.base"), viper.GetString("content.image.folder"))
