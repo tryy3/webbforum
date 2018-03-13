@@ -28,7 +28,7 @@ func (p ProfileHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	data := LayoutData(w, r).MergeKV("user", u)
-	mustRender(w, r, "profil", data)
+	mustRender(w, r, "profile", data)
 }
 
 // profileEditValidators are the required fields when editing a profile page
@@ -72,7 +72,7 @@ func (p ProfileEditHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	ab, err := authboss.AttributesFromRequest(r)
 	if err != nil {
 		data = data.MergeKV("error", "unable to prase request", "user", u)
-		mustRender(w, r, "profil", data)
+		mustRender(w, r, "profile", data)
 		return
 	}
 
@@ -80,7 +80,7 @@ func (p ProfileEditHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	errs := authboss.Validate(r, profileEditValidators)
 	if len(errs) > 0 {
 		data.MergeKV("errs", errs.Map(), "user", u)
-		mustRender(w, r, "profil", data)
+		mustRender(w, r, "profile", data)
 		return
 	}
 
@@ -88,7 +88,7 @@ func (p ProfileEditHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	err = p.storer.Put(u.(*models.User).Username, ab)
 	if badRequest(w, err) {
 		data = data.MergeKV("error", "internal error", "user", u)
-		mustRender(w, r, "profil", data)
+		mustRender(w, r, "profile", data)
 		return
 	}
 
@@ -131,7 +131,7 @@ func (p ProfileUploadHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 	if err != nil {
 		log.WithError(err).Error("internal error when uploading file")
 		data = data.MergeKV("error", "internal error", "user", u)
-		mustRender(w, r, "profil", data)
+		mustRender(w, r, "profile", data)
 		return
 	}
 	defer file.Close()
@@ -146,7 +146,7 @@ func (p ProfileUploadHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 	if err != nil {
 		log.WithError(err).Error("internal erorr when saving file")
 		data = data.MergeKV("error", "internal error", "user", u)
-		mustRender(w, r, "profil", data)
+		mustRender(w, r, "profile", data)
 		return
 	}
 
@@ -159,7 +159,7 @@ func (p ProfileUploadHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 	if sel.Error != nil && !sel.RecordNotFound() {
 		log.WithError(sel.Error).Error("internal error when retrieving existing data from database")
 		data = data.MergeKV("error", "internal error", "user", u)
-		mustRender(w, r, "profil", data)
+		mustRender(w, r, "profile", data)
 		return
 	}
 
@@ -189,7 +189,7 @@ func (p ProfileUploadHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 		if err != nil {
 			log.WithError(err).Error("internal error when removing temp folder")
 			data = data.MergeKV("error", "internal error", "user", u)
-			mustRender(w, r, "profil", data)
+			mustRender(w, r, "profile", data)
 			return
 		}
 	}
@@ -199,7 +199,7 @@ func (p ProfileUploadHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 	if err != nil {
 		log.WithError(err).Error("internal error when inserting to database")
 		data = data.MergeKV("error", "internal error", "user", u)
-		mustRender(w, r, "profil", data)
+		mustRender(w, r, "profile", data)
 		return
 	}
 
@@ -212,9 +212,9 @@ func (p ProfileUploadHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 	if err != nil {
 		log.WithError(err).Error("internal error when updating user")
 		data = data.MergeKV("error", "internal error", "user", u)
-		mustRender(w, r, "profil", data)
+		mustRender(w, r, "profile", data)
 		return
 	}
 
-	http.Redirect(w, r, "/profil", http.StatusFound)
+	http.Redirect(w, r, "/profile", http.StatusFound)
 }

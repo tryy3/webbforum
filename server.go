@@ -41,35 +41,41 @@ func StartServer(db *gorm.DB) error {
 	r.PathPrefix("/auth").Handler(ab.NewRouter())
 
 	r.Methods("GET").
-		PathPrefix("/anvandare/{username}").
+		PathPrefix("/user/{username}").
 		Handler(handlers.NewMemberHandler(storer))
 
 	r.Methods("GET").
-		PathPrefix("/profil").
+		PathPrefix("/profile").
 		Handler(middleware.LoggedInProtect(handlers.NewProfileHandler(ab), ab))
 	r.Methods("POST").
-		PathPrefix("/profil/upload").
+		PathPrefix("/profile/upload").
 		Handler(middleware.LoggedInProtect(handlers.NewProfileUploadHandler(db, ab), ab))
 	r.Methods("POST").
-		PathPrefix("/profil").
+		PathPrefix("/profile").
 		Handler(middleware.LoggedInProtect(handlers.NewProfileEditHandler(storer, ab), ab))
 
 	r.Methods("GET").
 		PathPrefix("/admin").
 		Handler(handlers.AdminHandler{db})
 	r.Methods("POST").
-		PathPrefix("/admin/kategori/skapa").
+		PathPrefix("/admin/category/create").
 		Handler(handlers.CategoryCreateHandler{db})
 	r.Methods("POST").
-		PathPrefix("/admin/kategori/uppdatera").
+		PathPrefix("/admin/category/modify").
 		Handler(handlers.CategoryEditHandler{db})
 	r.Methods("POST").
-		PathPrefix("/admin/kategori/ta_bort").
+		PathPrefix("/admin/category/remove").
 		Handler(handlers.CategoryDeleteHandler{db})
 
 	r.Methods("POST").
-		PathPrefix("/trad/skapa").
+		PathPrefix("/thread/create").
 		Handler(handlers.ThreadCreateHandler{db, ab})
+	r.Methods("POST").
+		PathPrefix("/thread/modify").
+		Handler(handlers.ThreadEditHandler{db})
+	r.Methods("POST").
+		PathPrefix("/thread/remove").
+		Handler(handlers.ThreadDeleteHandler{db})
 
 	r.Methods("GET").
 		PathPrefix("/").

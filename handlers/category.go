@@ -73,7 +73,6 @@ func (c CategoryEditHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var category models.Category
-
 	id, errStr := getCategoryID(attr)
 	if errStr != "" {
 		data, serveErr := serveAdminPage(c.Database, data)
@@ -85,6 +84,18 @@ func (c CategoryEditHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	category.ID = id
+
+	result := c.Database.First(&category)
+	if result.Error != nil || result.RecordNotFound() {
+		errStr := "tried to modify invalid category"
+		data, serveErr := serveAdminPage(c.Database, data)
+		if serveErr != "" {
+			errStr += "<br>" + serveErr
+		}
+		data = data.MergeKV("error", errStr)
+		mustRender(w, r, "admin", data)
+		return
+	}
 
 	if name, ok := attr.String("category_name"); ok {
 		category.Name = name

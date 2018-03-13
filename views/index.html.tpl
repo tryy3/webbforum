@@ -11,29 +11,17 @@
 
 <div class="row">
 	<div class="col-md-offset-1 col-md-10">
-		{{range .posts}}
+		{{range .categories}}
 		<div class="panel panel-info">
 			<div class="panel-heading">
 				<div class="row">
-					<div class="col-md-6">{{.Title}}</div>
-					<div class="col-md-6 text-right">
-						{{if $loggedin}}
-						<a class="btn btn-xs btn-link" href="/blogs/{{.ID}}/edit">Edit</a>
-						<a class="btn btn-xs btn-link" href="/blogs/{{.ID}}/destroy">Delete</a>
-						{{end}}
-					</div>
+                    <a href="/forums/{{.Name}}">{{.Name}}</a>
 				</div>
 			</div>
-			<div class="panel-body">{{.Content}}</div>
-			<div class="panel-footer">
-				<div class="row">
-					<div class="col-md-6">By {{.AuthorID}}</div>
-					<div class="col-md-6 text-right">Posted on {{formatDate .Date}}</div>
-				</div>
-			</div>
+			<div class="panel-body">
+                {{.Description}}
+            </div>
 		</div>
 		{{end}}
 	</div>
 </div>
-
-{{.}}

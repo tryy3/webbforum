@@ -5,7 +5,7 @@
         {{if .error}}
             <div class="alert alert-danger">{{.error}}</div>
         {{end}}
-        <form action="/admin/kategori/skapa" method="post">
+        <form action="/admin/category/create" method="post">
             <input type="hidden" name="csrf_token" value="{{.csrf_token}}" />
             <div class="form-group {{with .errs}}{{with $errlist := index . "category_name"}}has-error{{end}}{{end}}">
                 <input type="text" class="form-control" name="category_name" placeholder="Namn" value="{{.category.Name}}" />
@@ -48,7 +48,7 @@
         {{end}}
 
         {{define "category_edit"}}
-            <form action="/admin/kategori/uppdatera" method="post">
+            <form action="/admin/category/modify" method="post">
                 <input type="hidden" name="csrf_token" value="{{.csrf_token}}" />
                 <input type="hidden" name="category_id" value="{{.category.ID}}" />
                 <div class="form-group {{with .errs}}{{with $errlist := index . "category_name"}}has-error{{end}}{{end}}">
@@ -68,7 +68,7 @@
         {{end}}
 
         {{define "category_delete"}}
-            <form action="/admin/kategori/ta_bort" method="post">
+            <form action="/admin/category/remove" method="post">
                 <input type="hidden" name="csrf_token" value="{{.csrf_token}}" />
                 <input type="hidden" name="category_id" value="{{.category.ID}}" />
                 <h3>{{.category.Name}}</h3>

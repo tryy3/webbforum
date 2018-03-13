@@ -20,7 +20,7 @@ func (a MemberHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	data := LayoutData(w, r)
 	username, ok := mux.Vars(r)["username"]
 	if !ok {
-		mustRender(w, r, "medlem", data)
+		mustRender(w, r, "user", data)
 		return
 	}
 
@@ -30,7 +30,7 @@ func (a MemberHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		data.MergeKV("user", u)
 	}
 
-	mustRender(w, r, "anvandare", data)
+	mustRender(w, r, "user", data)
 }
 
 // setImageProfile will attempt to set the ProfileImageURL if ProfileImage exists on the user
