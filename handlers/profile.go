@@ -8,9 +8,9 @@ import (
 	"github.com/apex/log"
 	"github.com/jinzhu/gorm"
 	"github.com/spf13/viper"
+	"github.com/volatiletech/authboss"
 	"github.com/tryy3/webbforum/fileutils"
 	"github.com/tryy3/webbforum/models"
-	"github.com/volatiletech/authboss"
 )
 
 // ProfileHandler handles the /profil page with GET requests

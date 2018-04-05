@@ -35,7 +35,7 @@ var Strings = [...]string{
 	log.FatalLevel: "-",
 }
 
-// CliHandler implementation.
+// CliHandler writes all the logging to the terminal/console
 type CliHandler struct {
 	mu      sync.Mutex
 	Writer  io.Writer
@@ -57,7 +57,7 @@ func NewCli(w io.Writer) *CliHandler {
 	}
 }
 
-// HandleLog implements log.CliHandler.
+// HandleLog takes care of formatting, parsing and outputting the log message to the terminal/console
 func (h *CliHandler) HandleLog(e *log.Entry) error {
 	color := Colors[e.Level]
 	level := Strings[e.Level]

@@ -26,6 +26,7 @@ func StartServer(db *gorm.DB) error {
 		return errors.Wrap(err, "error when loading templates")
 	}
 
+	// initialize the storer
 	storer := auth.New(db)
 
 	// setup authboss
@@ -40,10 +41,22 @@ func StartServer(db *gorm.DB) error {
 	// setup the routes
 	r.PathPrefix("/auth").Handler(ab.NewRouter())
 
+	// static folders
+	imageFolder := filepath.Join(viper.GetString("content.base"), viper.GetString("content.image.folder"))
+	cssFolder := filepath.Join(viper.GetString("content.base"), viper.GetString("content.css.folder"))
+	jsFolder := filepath.Join(viper.GetString("content.base"), viper.GetString("content.js.folder"))
+
+	// serve the static folders
+	r.PathPrefix("/images/").Handler(http.StripPrefix("/images", http.FileServer(http.Dir(imageFolder))))
+	r.PathPrefix("/js/").Handler(http.StripPrefix("/js", http.FileServer(http.Dir(jsFolder))))
+	r.PathPrefix("/css/").Handler(http.StripPrefix("/css", http.FileServer(http.Dir(cssFolder))))
+
+	// user routes
 	r.Methods("GET").
 		PathPrefix("/user/{username}").
 		Handler(handlers.NewMemberHandler(storer))
 
+	// profile routes
 	r.Methods("GET").
 		PathPrefix("/profile").
 		Handler(middleware.LoggedInProtect(handlers.NewProfileHandler(ab), ab))
@@ -54,36 +67,58 @@ func StartServer(db *gorm.DB) error {
 		PathPrefix("/profile").
 		Handler(middleware.LoggedInProtect(handlers.NewProfileEditHandler(storer, ab), ab))
 
+	// admin routes
 	r.Methods("GET").
-		PathPrefix("/admin").
-		Handler(handlers.AdminHandler{db})
+		PathPrefix("/admin/category/remove/{category}").
+		Handler(handlers.CategoryDeleteHandler{db})
 	r.Methods("POST").
 		PathPrefix("/admin/category/create").
 		Handler(handlers.CategoryCreateHandler{db})
 	r.Methods("POST").
 		PathPrefix("/admin/category/modify").
 		Handler(handlers.CategoryEditHandler{db})
+	r.Methods("GET").
+		PathPrefix("/admin/group/remove/{group}").
+		Handler(handlers.GroupDeleteHandler{db})
 	r.Methods("POST").
-		PathPrefix("/admin/category/remove").
-		Handler(handlers.CategoryDeleteHandler{db})
+		PathPrefix("/admin/group/create").
+		Handler(handlers.GroupCreateHandler{db})
+	r.Methods("POST").
+		PathPrefix("/admin/group/modify").
+		Handler(handlers.GroupEditHandler{db})
+	r.Methods("GET").
+		PathPrefix("/admin").
+		Handler(handlers.AdminHandler{db})
 
+	// Posts routes
 	r.Methods("POST").
-		PathPrefix("/thread/create").
+		PathPrefix("/forums/thread/{thread}/new_post").
+		Handler(handlers.PostCreateHandler{db, ab})
+	r.Methods("GET", "POST").
+		PathPrefix("/forums/thread/{thread}/edit/{post}").
+		Handler(handlers.PostEditHandler{db, ab})
+	r.Methods("GET").
+		PathPrefix("/forums/thread/{thread}").
+		Handler(handlers.PostsShowHandler{db})
+
+	// Thread routes
+	r.Methods("GET", "POST").
+		PathPrefix("/forums/{category}/create_thread").
 		Handler(handlers.ThreadCreateHandler{db, ab})
 	r.Methods("POST").
 		PathPrefix("/thread/modify").
-		Handler(handlers.ThreadEditHandler{db})
+		Handler(handlers.ThreadEditHandler{db, ab})
 	r.Methods("POST").
 		PathPrefix("/thread/remove").
-		Handler(handlers.ThreadDeleteHandler{db})
+		Handler(handlers.ThreadDeleteHandler{db, ab})
+	r.Methods("GET").
+		PathPrefix("/forums/{category}").
+		Handler(handlers.ThreadShowHandler{db})
 
+	// main route
 	r.Methods("GET").
 		PathPrefix("/").
-		Handler(handlers.HomeHandler{Database:db})
-
-	// serve image folder
-	imageFolder := filepath.Join(viper.GetString("content.base"), viper.GetString("content.image.folder"))
-	r.PathPrefix("/images/").Handler(http.StripPrefix("/images", http.FileServer(http.Dir(imageFolder))))
+		Handler(handlers.HomeHandler{Database: db})
 
 	// NotFoundHandler
 	r.NotFoundHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -121,7 +156,7 @@ func loadTemplates() error {
 		"layout.html.tpl",
 		handlers.LayoutFuncs)
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error when compiling templates")
 	}
 	handlers.Templates = t
 	return nil

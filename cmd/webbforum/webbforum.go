@@ -15,21 +15,26 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+// main function is the function that will be ran first when the program is ran
 func main() {
+	// Initialize all configurations and components
 	setupLogger()
 	configureViper()
 	defaultConfig()
 
+	// attempt to read the config
 	if err := readConfig(); err != nil {
 		log.Fatal(fmt.Sprintf("error creating config: %s", err.Error()))
 	}
 
+	// attempt to connect to the database
 	db, err := connectDatabase()
 	if err != nil {
 		log.Fatal(fmt.Sprintf("error connecting to database: %s", err.Error()))
 	}
 	db.LogMode(true)
 
+	// attempt to initialize setup tasks on the database
 	err = setupDatabase(db)
 	if err != nil {
 		log.Fatal(fmt.Sprintf("error setup database: %s", err.Error()))
@@ -42,6 +47,7 @@ func main() {
 	}
 }
 
+// setupLogger configures default settings on the logger
 func setupLogger() {
 	// handler for logging to file
 	file := loghandler.NewFile("log_%date%.log")
@@ -52,11 +58,12 @@ func setupLogger() {
 	// handler for logging to multiple handlers
 	handler := loghandler.NewMulti(cli, file)
 
-	// set default handler
+	// set default handler and logging level
 	log.SetHandler(handler)
 	log.SetLevel(log.DebugLevel)
 }
 
+// configureViper configure the config system
 func configureViper() {
 	// configure the config
 	viper.SetConfigName("config")
@@ -64,25 +71,31 @@ func configureViper() {
 	viper.SetConfigType("json")
 }
 
+// defaultConfig initialize default config values
 func defaultConfig() {
-	// default config values
+	// database settings
 	viper.SetDefault("database.host", "127.0.0.1")
 	viper.SetDefault("database.port", 3306)
 	viper.SetDefault("database.username", "root")
 	viper.SetDefault("database.password", "")
 	viper.SetDefault("database.name", "webbforum")
 
+	// http server settings
 	viper.SetDefault("http.host", "127.0.0.1")
 	viper.SetDefault("http.port", 80)
 
+	// xsrf protection value
 	viper.SetDefault("xsrf.name", "csrf_token")
 
+	// cookie settings
 	viper.SetDefault("cookie.key", utils.GenerateRandomKey(64))
 	viper.SetDefault("cookie.expiry", 24*365)
 
+	// local session settings
 	viper.SetDefault("session.key", utils.GenerateRandomKey(64))
 	viper.SetDefault("session.name", "ab_webbforum")
 
+	// smtp settings
 	viper.SetDefault("smtp.host", "smtp.gmail.com")
 	viper.SetDefault("smtp.port", 587)
 	viper.SetDefault("smtp.username", "example@gmail.com")
@@ -91,15 +104,20 @@ func defaultConfig() {
 	viper.SetDefault("smtp.email", "webbforum@gmail.com")
 	viper.SetDefault("smtp.name", "Webbforum Administrator")
 
+	// views settings
 	viper.SetDefault("views.folder", "views")
 	viper.SetDefault("views.partials", "views/partials")
 
+	// http content settings
 	viper.SetDefault("content.base", "content")
 	viper.SetDefault("content.tmp", "tmp")
 	viper.SetDefault("content.image.folder", "image")
 	viper.SetDefault("content.image.size", 10*1024*1024) // 10 MB
+	viper.SetDefault("content.js.folder", "js")
+	viper.SetDefault("content.css.folder", "css")
 }
 
+// readConfig will attempt to read existing config file, if file doesn't exists it will create one with default settings
 func readConfig() error {
 	// try to read the config
 	err := viper.ReadInConfig()
@@ -113,6 +131,7 @@ func readConfig() error {
 	return nil
 }
 
+// connectDatabase attempts to connect to mysql
 func connectDatabase() (*gorm.DB, error) {
 	// connect to mysql database
 	db, err := gorm.Open("mysql", fmt.Sprintf("%s:%s@(%s:%d)/%s?parseTime=true&charset=utf8",
@@ -129,6 +148,7 @@ func connectDatabase() (*gorm.DB, error) {
 	return db, err
 }
 
+// setupDatabase takes care of the default table migrations
 func setupDatabase(db *gorm.DB) error {
 	// auto migrate all of the models
 	db.AutoMigrate(&models.Category{})
@@ -139,16 +159,6 @@ func setupDatabase(db *gorm.DB) error {
 	db.AutoMigrate(&models.User{})
 	db.AutoMigrate(&models.Token{})
 	db.AutoMigrate(&models.File{})
-
-	// insert default permissions, update if permission has changed
-	perms := models.DefaultPermission.Permissions()
-	tx := db.Begin()
-	for k, v := range perms {
-		err := tx.Set("gorm:insert_option", "ON DUPLICATE KEY UPDATE name = VALUES(name)").Create(&models.Permission{Bit: v, Name: k}).Error
-		if err != nil {
-			tx.Rollback()
-			return err
-		}
-	}
-	return tx.Commit().Error
+	db.AutoMigrate(&models.Permission{})
+	return db.Error
 }

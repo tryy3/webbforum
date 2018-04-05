@@ -1,38 +1,32 @@
-<div class="row">
-	<div class="col-md-offset-4 col-md-4">
-		<div class="panel panel-default">
-			<div class="panel-heading">Please sign in to continue!</div>
-			<div class="panel-body">
-				{{if .error}}
-				<div class="alert alert-danger">{{.error}}</div>
-				{{end}}
-				<form method="POST">
-					<div class="form-group">
-						<input type="text" class="form-control" name="{{.primaryID}}" placeholder="{{title .primaryID}}" value="{{.primaryIDValue}}">
-					</div>
-					<div class="form-group">
-						<input  type="password" class="form-control" name="password" placeholder="Password">
-					</div>
-					{{if .showRemember}}
-					<div class="form-group">
-						<input type="checkbox" name="rm" value="true"> Remember Me
-					</div>
-					{{end}}
-					<input type="hidden" name="{{.xsrfName}}" value="{{.xsrfToken}}" />
-					<div class="row">
-						<div class="col-md-offset-1 col-md-10">
-							<button class="btn btn-primary btn-block" type="submit">Login</button>
-						</div>
-					</div>
-					{{if .showRecover}}
-					<div class="row">
-						<div class="col-md-offset-1 col-md-10">
-							<a class="btn btn-link btn-block" href="{{mountpathed "recover"}}">Recover Account</a>
-						</div>
-					</div>
-					{{end}}
-				</form>
-			</div>
-		</div>
-	</div>
-</div>
+<form method="POST" class="box">
+    <div class="box-title">Logga in</div>
+
+    {{if .error}}
+        <div class="alert alert-danger">
+            {{translate .error}}
+        </div>
+    {{end}}
+    <input type="hidden" name="{{.xsrfName}}" value="{{.xsrfToken}}" />
+
+    <span class="input-title">Användarnamn</span>
+    <input type="text" name="{{.primaryID}}" placeholder="Användarnamn" value="{{.primaryIDValue}}">
+
+    <span class="input-title">Lösenord</span>
+    <input  type="password" class="input-box" name="password" placeholder="Lösenord">
+
+    {{if .showRemember}}
+        <div class="rememberWrapper">
+            <span class="rememberCheckbox">
+                <input type="checkbox" id="rememberCheckboxInput" class="input-box" name="rm" value="true">
+                <label for="rememberCheckboxInput"></label>
+            </span>
+            <span class="remember">Kom ihåg mig</span>
+        </div>
+    {{end}}
+
+    <div class="btnWrapper"><button class="btn" type="submit">Logga in</button></div>
+
+    {{if .showRecover}}
+        <div class="forgotWrapper"><a class="forgot" href="{{mountpathed "recover"}}">Glömt lösenord?</a></div>
+    {{end}}
+</form>

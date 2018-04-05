@@ -1,47 +1,40 @@
-<div class="row">
-	<div class="col-md-offset-4 col-md-4">
-		<div class="panel panel-default">
-			<div class="panel-heading">Registration</div>
-			<div class="panel-body">
-				<form method="POST">
-                    <div class="form-group {{with .errs}}{{with $errlist := index . "first_name"}}has-error{{end}}{{end}}">
-                        <input type="text" class="form-control" name="first_name" placeholder="Name" value="{{.first_name}}" />
-                    {{with .errs}}{{with $errlist := index . "first_name"}}{{range $errlist}}<span class="help-block">{{.}}</span>{{end}}{{end}}{{end}}
-                    </div>
-                    <div class="form-group {{with .errs}}{{with $errlist := index . "last_name"}}has-error{{end}}{{end}}">
-                        <input type="text" class="form-control" name="last_name" placeholder="Last name" value="{{.last_name}}" />
-                    {{with .errs}}{{with $errlist := index . "last_name"}}{{range $errlist}}<span class="help-block">{{.}}</span>{{end}}{{end}}{{end}}
-                    </div>
-					{{$pid := .primaryID}}
-					<div class="form-group {{with .errs}}{{with $errlist := index . $pid}}has-error{{end}}{{end}}">
-						<input type="text" class="form-control" name="{{.primaryID}}" placeholder="{{title .primaryID}}" value="{{.primaryIDValue}}" />
-						{{with .errs}}{{with $errlist := index . $pid}}{{range $errlist}}<span class="help-block">{{.}}</span>{{end}}{{end}}{{end}}
-					</div>
-                    <div class="form-group {{with .errs}}{{with $errlist := index . "email"}}has-error{{end}}{{end}}">
-                        <input type="text" class="form-control" name="email" placeholder="Email" value="{{.email}}" />
-                    {{with .errs}}{{with $errlist := index . "email"}}{{range $errlist}}<span class="help-block">{{.}}</span>{{end}}{{end}}{{end}}
-                    </div>
-					<div class="form-group {{with .errs}}{{with $errlist := index . "password"}}has-error{{end}}{{end}}">
-						<input type="password" class="form-control" name="password" placeholder="Password" value="{{.password}}" />
-						{{with .errs}}{{with $errlist := index . "password"}}{{range $errlist}}<span class="help-block">{{.}}</span>{{end}}{{end}}{{end}}
-					</div>
-					<div class="form-group {{with .errs}}{{with $errlist := index . "confirm_password"}}has-error{{end}}{{end}}">
-						<input type="password" class="form-control" name="confirm_password" placeholder="Confirm Password" value="{{.confirmPassword}}" />
-						{{with .errs}}{{with $errlist := index . "confirm_password"}}{{range $errlist}}<span class="help-block">{{.}}</span>{{end}}{{end}}{{end}}
-					</div>
-					<input type="hidden" name="{{.xsrfName}}" value="{{.xsrfToken}}" />
-					<div class="row">
-						<div class="col-md-offset-1 col-md-10">
-							<button class="btn btn-primary btn-block" type="submit">Register</button>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-offset-1 col-md-10">
-							<a class="btn btn-link btn-block" href="{{mountpathed "login"}}">Cancel</a>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-</div>
+<form method="POST" class="box">
+    <div class="box-title">Registration</div>
+
+    <input type="hidden" name="{{.xsrfName}}" value="{{.xsrfToken}}" />
+
+    {{with .errs}}{{with $errlist := index . "first_name"}}<span class="has-error">{{end}}{{end}}
+    <span class="input-title">Namn</span>
+    <input type="text" name="first_name" placeholder="Namn" value="{{.first_name}}"/>
+    {{with .errs}}{{with $errlist := index . "first_name"}}{{range $errlist}}<div class="error-block">{{translate .}}</div>{{end}}</span>{{end}}{{end}}
+
+    {{with .errs}}{{with $errlist := index . "last_name"}}<span class="has-error">{{end}}{{end}}
+    <span class="input-title">Efternamn</span>
+    <input type="text" name="last_name" placeholder="Efternamn" value="{{.last_name}}"/>
+    {{with .errs}}{{with $errlist := index . "last_name"}}{{range $errlist}}<div class="error-block">{{translate .}}</div>{{end}}</span>{{end}}{{end}}
+
+    {{with .errs}}{{with $errlist := index . "email"}}<span class="has-error">{{end}}{{end}}
+    <span class="input-title">E-postadress</span>
+    <input type="text" name="email" placeholder="E-postadress" value="{{.email}}"/>
+    {{with .errs}}{{with $errlist := index . "email"}}{{range $errlist}}<div class="error-block">{{translate .}}</div>{{end}}</span>{{end}}{{end}}
+
+    {{$pid := .primaryID}}
+    {{with .errs}}{{with $errlist := index . $pid}}<span class="has-error">{{end}}{{end}}
+    <span class="input-title">Användarnamn</span>
+    <input type="text" name="{{.primaryID}}" placeholder="Användarnamn" value="{{.primaryIDValue}}"/>
+    {{with .errs}}{{with $errlist := index . $pid}}{{range $errlist}}<div class="error-block">{{translate .}}</div>{{end}}</span>{{end}}{{end}}
+
+    {{with .errs}}{{with $errlist := index . "password"}}<span class="has-error">{{end}}{{end}}
+    <span class="input-title">Lösenord</span>
+    <input type="password" name="password" placeholder="Lösenord" value="{{.password}}"/>
+    {{with .errs}}{{with $errlist := index . "password"}}{{range $errlist}}<div class="error-block">{{translate .}}</div>{{end}}</span>{{end}}{{end}}
+
+    {{with .errs}}{{with $errlist := index . "confirm_password"}}<span class="has-error">{{end}}{{end}}
+    <span class="input-title">Bekräfta lösenord</span>
+    <input type="password" name="confirm_password" placeholder="Bekräfta lösenord" value="{{.confirmPassword}}"/>
+    {{with .errs}}{{with $errlist := index . "confirm_password"}}{{range $errlist}}<div class="error-block">{{translate .}}</div>{{end}}</span>{{end}}{{end}}
+
+    <div class="btnWrapper"><button class="btn" type="submit">Registrera</button></div>
+
+    <div class="forgotWrapper"><a class="forgot" href="{{mountpathed "login"}}">Redan medlem?</a></div>
+</form>

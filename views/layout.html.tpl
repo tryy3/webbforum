@@ -6,43 +6,52 @@
 
 	<title>{{template "pagetitle" .}}</title>
 
-	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
-	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
+    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/solid.js" integrity="sha384-+Ga2s7YBbhOD6nie0DzrZpJes+b2K1xkpKxTFFcx59QmVPaSA8c7pycsNaFwUK6l" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/fontawesome.js" integrity="sha384-7ox8Q2yzO/uWircfojVuCQOZl+ZZBg2D2J5nkpLqzH1HY0C1dHlTKIbpRz/LG23c" crossorigin="anonymous"></script>
 
-	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
-	<script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/css/sceditor.default.min.css">
+    <link rel="stylesheet" href="/css/content/default.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script type="text/javascript" src="/js/sceditor.min.js"></script>
+    <script type="text/javascript" src="/js/bbcode.js"></script>
 </head>
-<body class="container-fluid" style="padding-top: 15px;">
-	<nav class="navbar navbar-default">
-		<div class="container-fluid">
-			<div class="navbar-header">
-				<a class="navbar-brand" href="/">Auth-Blog</a>
-			</div>
+<body>
+	<nav class="navbar">
+        <a class="navbar-logo" href="/"><img src="/images/FM_vänster_neg.png" alt="Försvarsmakten"></a>
 
-			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-				<ul class="nav navbar-nav navbar-right">
-					{{if not .loggedin}}
-					<li><a href="/auth/register">Register</a></li>
-					<li><a href="/auth/login"><i class="fa fa-sign-in"></i> Login</a></li>
-					{{else}}
-					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Welcome {{.current_user_name}}! <span class="caret"></span></a>
-						<ul class="dropdown-menu" role="menu">
-							<li>
-								<a href="/auth/logout">
-									<i class="fa fa-sign-out"></i> Logout
-								</a>
-							</li>
-						</ul>
-					</li>
-					{{end}}
-				</ul>
-			</div>
-		</div>
+        <ul class="navbar-middle">
+            <li>
+                <a href="/">Hem</a>
+            </li>
+            <li>
+                <a href="/">Forum</a>
+            </li>
+            <li>
+                <a href="#">Kontakta oss</a>
+            </li>
+        </ul>
+
+        <ul class="navbar-right">
+            {{if not .loggedin}}
+                <li><a href="/auth/register">Register</a></li>
+                <li><a href="/auth/login"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+            {{else}}
+                <li>
+                    <a href="/profile">Välkommen {{.current_user_name}}! <span class="caret"></span></a>
+                </li>
+                <li>
+                    <a href="/auth/logout">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </li>
+            {{end}}
+        </ul>
 	</nav>
 
-	{{with .flash_success}}<div class="alert alert-success">{{.}}</div>{{end}}
-	{{with .flash_error}}<div class="alert alert-danger">{{.}}</div>{{end}}
+    </br>
+	{{with .flash_success}}<div class="alert alert-success">{{translate .}}</div>{{end}}
+	{{with .flash_error}}<div class="alert alert-danger">{{translate .}}</div>{{end}}
 	{{template "yield" .}}
 	{{template "authboss" .}}
 </body>

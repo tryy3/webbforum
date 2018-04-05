@@ -3,6 +3,12 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/CalebQ42/bbConvert"
+  packages = ["."]
+  revision = "4d7de4d47ea5a57440e9add54b743fd9e043d349"
+
+[[projects]]
+  branch = "master"
   name = "github.com/aarondl/tpl"
   packages = ["."]
   revision = "e4905e745b4e2371caa002edf3ccdaf798ffd4b4"
@@ -18,6 +24,12 @@
   packages = ["spew"]
   revision = "346938d642f2ec3594ed81d874461961cd0faa76"
   version = "v1.1.0"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/dustin/go-humanize"
+  packages = ["."]
+  revision = "bb3d318650d48840a39aa21a027c6630e198e626"
 
 [[projects]]
   name = "github.com/fatih/color"
@@ -279,6 +291,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "138ea01eb9334185cdf994636c571776c6d09feb74878f770b97631b60828e08"
+  inputs-digest = "b3f6d8b9119108ceb713b368deef321762af872d9b41972c6d274ab9a0f874a9"
   solver-name = "gps-cdcl"
   solver-version = 1

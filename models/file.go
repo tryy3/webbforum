@@ -3,6 +3,7 @@ package models
 import "time"
 
 type File struct {
+	// General information
 	ID            uint `primary_key`
 	ContentType   string
 	FileSizeBytes int64
@@ -10,7 +11,7 @@ type File struct {
 	Base64Hash    string
 	UserID        uint
 
-	// Extra filled by gorm
+	// Time related information
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }

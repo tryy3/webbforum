@@ -4,15 +4,19 @@ import "time"
 
 // Permission is the database model groups
 type Group struct {
-	ID         uint `gorm:"primary_key"`
-	Name       string
-	Permission uint64
+	// General information
+	ID          uint `gorm:"primary_key"`
+	Name        string
+	Description string
 
-	// Parent
+	// Parent group
 	ParentID uint
 	Parent   *Group
 
-	// Extra filled by gorm
+	// Time related information
 	CreatedAt time.Time
 	UpdatedAt time.Time
+
+	// Extra columns used when rendering to a template
+	Permissions []ParsedPermission `gorm:"-"`
 }

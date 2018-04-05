@@ -1,27 +1,41 @@
-{{define "pagetitle"}}Blogs - Index{{end}}
+{{define "pagetitle"}}Försvarsmakten forum{{end}}
 
-{{$loggedin := .loggedin}}
-{{if $loggedin}}
-<div class="row" style="margin-bottom: 20px;">
-	<div class="col-md-offset-9 col-md-2 text-right">
-		<a class="btn btn-primary" href="/blogs/new"><i class="fa fa-plus"></i> New Post</a>	
-	</div>
-</div>
-{{end}}
+<div class="page">
+    <div class="page-body">
+        <h1>Kategorier</h1>
+        {{range .categories}}
+            <div class="category-panel">
+                <div class="icon">
+                    <i class="fas fa-circle"></i>
+                </div>
 
-<div class="row">
-	<div class="col-md-offset-1 col-md-10">
-		{{range .categories}}
-		<div class="panel panel-info">
-			<div class="panel-heading">
-				<div class="row">
-                    <a href="/forums/{{.Name}}">{{.Name}}</a>
-				</div>
-			</div>
-			<div class="panel-body">
-                {{.Description}}
+                <div class="body">
+                    <div class="title">
+                        <a href="/forums/{{.DisplayName}}">{{.Name}}</a>
+                    </div>
+                    <div class="description">
+                        {{.Description}}
+                    </div>
+                </div>
+
+                <div class="information">
+                    {{formatNumber .CountThreads}} Trådar<br>
+                    {{formatNumber .CountPost}} Kommentarer
+                </div>
+
+                <div class="status">
+                    {{if not .LatestUpdate}}
+                        <div class="title"><a href="#">Ingen har skapat en tråd</a></div>
+                    {{else}}
+                        <div class="title">
+                            <a href="/forums/threads/{{.LatestUpdate.Thread.DisplayName}}">{{.LatestUpdate.Thread.Name}}</a>
+                        </div>
+                        <div class="description">
+                            Av <a href="/user/{{.LatestUpdate.User.Username}}">{{.LatestUpdate.User.Username}}</a> {{humanDate .LatestUpdate.UpdatedAt}}
+                        </div>
+                    {{end}}
+                </div>
             </div>
-		</div>
-		{{end}}
-	</div>
+        {{end}}
+    </div>
 </div>

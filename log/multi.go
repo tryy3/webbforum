@@ -17,7 +17,7 @@ func NewMulti(h ...log.Handler) *MultiHandler {
 	}
 }
 
-// HandleLog implements the log.Handler interface
+// HandleLog will redirect a log entry to multiple loggers
 func (h *MultiHandler) HandleLog(e *log.Entry) error {
 	var result *multierror.Error
 	for _, handler := range h.Handlers {

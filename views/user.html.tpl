@@ -1,32 +1,28 @@
 {{define "pagetitle"}}Profile - Index{{end}}
 
-<div class="row">
-	<div class="col-md-offset-1 col-md-10">
-        <table style="width:100%">
-            <tr>
-                <td>Username</td>
-                <td>{{.user.Username}}</td>
-            </tr>
-            <tr>
-                <td>Email</td>
-                <td>{{.user.Email}}</td>
-            </tr>
-            <tr>
-                <td>Name</td>
-                <td>{{.user.FirstName}} {{.user.LastName}}</td>
-            </tr>
-            <tr>
-                <td>Profile Image</td>
-                <td><img src="{{.user.ProfileImageURL}}" /></td>
-            </tr>
-            <tr>
-                <td>Description</td>
-                <td>{{.user.Description}}</td>
-            </tr>
-            <tr>
-                <td>Group</td>
-                <td>{{.user.Group.Name}}</td>
-            </tr>
-        </table>
+<div class="page">
+    <div class="page-body">
+        <h1>{{.user.Username}}</h1>
+
+        <div class="profile-body">
+            <div class="left">
+                <img src="{{.user.ProfileImageURL}}" alt="{{.user.Username}}"><br>
+                32,421 Inlägg<br>
+                3,324 Trådar
+            </div>
+            <div class="right">
+                <b>Namn: </b>{{.user.FirstName}} {{.user.LastName}}<br>
+                <b>E-postadress: </b>{{.user.Email}}<br>
+                <b>Grupp: </b>
+                {{if .user.Group}}
+                    {{.user.Group.Name}}
+                {{else}}
+                    User
+                {{end}}
+                <br>
+                <br>
+                <b>Beskrivning: </b>{{.user.ParsedDescription}}
+            </div>
+        </div>
     </div>
 </div>

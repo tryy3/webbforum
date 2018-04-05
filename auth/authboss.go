@@ -15,8 +15,6 @@ import (
 	"github.com/justinas/nosurf"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
-	"github.com/tryy3/webbforum/handlers"
-	"github.com/tryy3/webbforum/log"
 	"github.com/volatiletech/authboss"
 	_ "github.com/volatiletech/authboss/auth"
 	_ "github.com/volatiletech/authboss/confirm"
@@ -24,15 +22,18 @@ import (
 	_ "github.com/volatiletech/authboss/recover"
 	_ "github.com/volatiletech/authboss/register"
 	_ "github.com/volatiletech/authboss/remember"
+	"github.com/tryy3/webbforum/handlers"
+	"github.com/tryy3/webbforum/log"
 )
 
 // SetupAuthboss creates a new Authboss instance with everything configured
-func SetupAuthboss(storer authboss.Storer) (*authboss.Authboss, error) {
+func SetupAuthboss(storer *Storer) (*authboss.Authboss, error) {
 	// initialize authboss
 	ab := authboss.New()
 
 	// set general configurations
 	ab.Storer = storer
+	ab.OAuth2Storer = storer
 	ab.MountPath = "/auth"
 	ab.ViewsPath = "ab_views"
 	ab.LogWriter = log.NewAuthbossLogger()

@@ -1,6 +1,7 @@
 package models
 
 import (
+	"html/template"
 	"time"
 
 	"github.com/volatiletech/authboss"
@@ -8,6 +9,7 @@ import (
 
 // User is the database model of a user
 type User struct {
+	// General information
 	ID             uint   `gorm:"primary_key"`
 	Username       string `gorm:"unique"`
 	FirstName      string
@@ -20,7 +22,7 @@ type User struct {
 	// Permission
 	Permission uint64
 	GroupID    uint
-	Group      Group
+	Group      *Group
 
 	// Auth
 	Email    string `gorm:"unique"`
@@ -39,14 +41,16 @@ type User struct {
 	RecoverToken       string
 	RecoverTokenExpiry time.Time
 
-	// Extra filled by gorm
+	// Time related information
 	CreatedAt time.Time
 	UpdatedAt time.Time
 
 	// Template related columns
-	ProfileImageURL string `gorm:"-"`
+	ProfileImageURL   string        `gorm:"-"`
+	ParsedDescription template.HTML `gorm:"-"`
 }
 
+// UserStorer is the interface required for taking care of a user
 type UserStorer interface {
 	Create(key string, attr authboss.Attributes) error
 	Put(key string, attr authboss.Attributes) error

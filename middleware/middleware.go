@@ -21,6 +21,7 @@ func NoSurfingMiddleware(h http.Handler) http.Handler {
 	return surfing
 }
 
+// Logging is a http middlware for logging all http traffic
 func Logging(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		logger := makeLogger(w)

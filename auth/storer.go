@@ -2,8 +2,8 @@ package auth
 
 import (
 	"github.com/jinzhu/gorm"
-	"github.com/tryy3/webbforum/models"
 	"github.com/volatiletech/authboss"
+	"github.com/tryy3/webbforum/models"
 )
 
 // Storer is the implementation of authboss.Storer and all of the extra store functionalities
@@ -97,4 +97,12 @@ func (s Storer) RecoverUser(token string) (interface{}, error) {
 		return nil, authboss.ErrTokenNotFound
 	}
 	return &user, nil
+}
+
+func (s Storer) PutOAuth(uid, provider string, attr authboss.Attributes) error {
+	return authboss.ErrUserNotFound
+}
+
+func (s Storer) GetOAuth(uid, provider string) (interface{}, error) {
+	return nil, authboss.ErrUserNotFound
 }

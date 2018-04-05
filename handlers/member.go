@@ -26,15 +26,16 @@ func (a MemberHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	u, err := a.store.Get(username)
 	if err == nil {
-		u = setImageProfile(u)
+		u = setCustomUserData(u)
+
 		data.MergeKV("user", u)
 	}
 
 	mustRender(w, r, "user", data)
 }
 
-// setImageProfile will attempt to set the ProfileImageURL if ProfileImage exists on the user
-func setImageProfile(u interface{}) interface{} {
+// setCustomUserData will attempt to set the ProfileImageURL if ProfileImage exists on the user
+func setCustomUserData(u interface{}) interface{} {
 	user, ok := u.(*models.User)
 	if !ok {
 		return u
@@ -46,5 +47,9 @@ func setImageProfile(u interface{}) interface{} {
 
 	profileURL := "/images/" + user.ProfileImage.Base64Hash
 	user.ProfileImageURL = profileURL
+
+	conv := NewBBCodeConverter()
+	user.ParsedDescription = conv.Convert(user.Description)
+
 	return user
 }
