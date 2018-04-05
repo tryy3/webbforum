@@ -57,6 +57,7 @@ func getCategoryID(attr authboss.Attributes) (uint, string) {
 	return uint(id), ""
 }
 
+// getGroupID retrieves group ID from the request
 func getGroupID(attr authboss.Attributes) (uint, string) {
 	idStr, ok := attr.String("group_id")
 	if !ok {
@@ -71,6 +72,7 @@ func getGroupID(attr authboss.Attributes) (uint, string) {
 	return uint(id), ""
 }
 
+// getThreadID retrieves thread ID from the request
 func getThreadID(attr authboss.Attributes) (uint, string) {
 	idStr, ok := attr.String("thread_id")
 	if !ok {
