@@ -8,14 +8,16 @@ import (
 	"github.com/apex/log"
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
-	"github.com/volatiletech/authboss"
 	"github.com/tryy3/webbforum/models"
+	"github.com/volatiletech/authboss"
 )
 
+// GroupCreateHandler creates a handler for creating group in database
 type GroupCreateHandler struct {
 	Database *gorm.DB
 }
 
+// ServeHTTP handle creating new group
 func (c GroupCreateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	data := LayoutData(w, r)
 
@@ -59,10 +61,12 @@ func (c GroupCreateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/admin", http.StatusFound)
 }
 
+// GroupEditHandler handles editing group in database
 type GroupEditHandler struct {
 	Database *gorm.DB
 }
 
+// ServeHTTP handles editing group in database
 func (c GroupEditHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	data := LayoutData(w, r)
 
@@ -140,7 +144,7 @@ func (c GroupEditHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var deleteIDs []uint
 
 	for _, perm := range perms {
-		if _, ok := attr["permission_" + perm.Permission]; !ok {
+		if _, ok := attr["permission_"+perm.Permission]; !ok {
 			deleteIDs = append(deleteIDs, perm.ID)
 		}
 	}
@@ -172,7 +176,7 @@ func (c GroupEditHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 		if !found {
 			permission := models.Permission{
-				GroupID: group.ID,
+				GroupID:    group.ID,
 				Permission: parsed,
 			}
 
@@ -191,10 +195,12 @@ func (c GroupEditHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/admin", http.StatusFound)
 }
 
+// GroupDeleteHandler handles deleting a group in database
 type GroupDeleteHandler struct {
 	Database *gorm.DB
 }
 
+// ServeHTTP handles deleting a group in database
 func (c GroupDeleteHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	data := LayoutData(w, r)
 
@@ -220,7 +226,6 @@ func (c GroupDeleteHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	var group models.Group
 	group.ID = uint(id)
-
 
 	err = c.Database.Where("group_id = ?", group.ID).Delete(models.Group{}).Error
 	if err != nil {

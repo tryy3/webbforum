@@ -25,6 +25,7 @@ func serveAdminPage(db *gorm.DB, data authboss.HTMLData) (authboss.HTMLData, str
 		return data, "internal error"
 	}
 
+	// loops through all groups to get the permissions
 	for _, g := range groups {
 		parsed, err := models.GetGroupPermission(db, g)
 		if err != nil {
@@ -39,10 +40,12 @@ func serveAdminPage(db *gorm.DB, data authboss.HTMLData) (authboss.HTMLData, str
 	return data, ""
 }
 
+// AdminHandler shows admin pages
 type AdminHandler struct {
 	Database *gorm.DB
 }
 
+// ServeHTTP renders the admin page
 func (a AdminHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	data := LayoutData(w, r)
 	data, err := serveAdminPage(a.Database, data)

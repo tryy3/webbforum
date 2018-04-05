@@ -14,6 +14,7 @@ import (
 	"github.com/volatiletech/authboss"
 )
 
+// badRequest checks if there is an error, returns a bad request
 func badRequest(w http.ResponseWriter, err error) bool {
 	if err == nil {
 		return false
@@ -26,6 +27,7 @@ func badRequest(w http.ResponseWriter, err error) bool {
 	return true
 }
 
+// getUser retrieves a user from the request
 func getUser(w http.ResponseWriter, r *http.Request, ab *authboss.Authboss) (interface{}, bool) {
 	u, err := ab.CurrentUser(w, r)
 	if err != nil {
@@ -40,6 +42,7 @@ func getUser(w http.ResponseWriter, r *http.Request, ab *authboss.Authboss) (int
 	return u, true
 }
 
+// getCategoryID retrieves a category ID from the request
 func getCategoryID(attr authboss.Attributes) (uint, string) {
 	idStr, ok := attr.String("category_id")
 	if !ok {
@@ -89,7 +92,6 @@ func urlEncoded(str string) (string, error) {
 	}
 	return u.String(), nil
 }
-
 
 type BBCodeConverter struct {
 	conv      *bbConvert.Converter

@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+// Post is the database model for posts
 type Post struct {
 	// General information
 	ID      uint `gorm:"primary_key"`
