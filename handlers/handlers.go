@@ -87,6 +87,7 @@ func getThreadID(attr authboss.Attributes) (uint, string) {
 	return uint(id), ""
 }
 
+// urlEncoded tries to parse a URL
 func urlEncoded(str string) (string, error) {
 	u, err := url.Parse(str)
 	if err != nil {
@@ -95,11 +96,13 @@ func urlEncoded(str string) (string, error) {
 	return u.String(), nil
 }
 
+// BBCodeConverter converts BB code to HTML
 type BBCodeConverter struct {
 	conv      *bbConvert.Converter
 	emoticons map[string]string
 }
 
+// Convert converts to BB code to HTML
 func (b BBCodeConverter) Convert(str string) template.HTML {
 	c := b.conv.Convert(str)
 	c = strings.Replace(c, "\n", "<br />", -1)
@@ -119,6 +122,7 @@ func (b BBCodeConverter) Convert(str string) template.HTML {
 	return template.HTML(c)
 }
 
+// NewBBCodeConverter creates a new BBCodeConverter
 func NewBBCodeConverter() *BBCodeConverter {
 	var htmlConv bbConvert.HTMLConverter
 	htmlConv.ImplementDefaults()

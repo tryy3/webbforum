@@ -10,10 +10,11 @@ import (
 	"github.com/apex/log"
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
-	"github.com/volatiletech/authboss"
 	"github.com/tryy3/webbforum/models"
+	"github.com/volatiletech/authboss"
 )
 
+// servePostPage takes care of retriving the general data that post page need
 func servePostPage(r *http.Request, data authboss.HTMLData, db *gorm.DB) (authboss.HTMLData, string) {
 	cat, ok := mux.Vars(r)["thread"]
 	if !ok {
@@ -69,10 +70,12 @@ func servePostPage(r *http.Request, data authboss.HTMLData, db *gorm.DB) (authbo
 	return data, ""
 }
 
+// PostsShowHandler handler for showing a post
 type PostsShowHandler struct {
 	Database *gorm.DB
 }
 
+// ServeHTTP retrieves data regarding a post and shows it
 func (s PostsShowHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	data := LayoutData(w, r)
 
@@ -84,11 +87,13 @@ func (s PostsShowHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	mustRender(w, r, "posts", data)
 }
 
+// PostCreateHandler handler for creating a post
 type PostCreateHandler struct {
 	Database *gorm.DB
 	Authboss *authboss.Authboss
 }
 
+// ServeHTTP creates a new post in the db
 func (p PostCreateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	data := LayoutData(w, r)
 
@@ -142,11 +147,13 @@ func (p PostCreateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, strings.TrimRight(r.RequestURI, "/new_post"), http.StatusFound)
 }
 
+// PostEditHandler handler for editing a post
 type PostEditHandler struct {
 	Database *gorm.DB
 	Authboss *authboss.Authboss
 }
 
+// ServeHTTP modifies a posts
 func (p PostEditHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	data := LayoutData(w, r)
 

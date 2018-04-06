@@ -8,9 +8,9 @@ import (
 	"github.com/apex/log"
 	"github.com/jinzhu/gorm"
 	"github.com/spf13/viper"
-	"github.com/volatiletech/authboss"
 	"github.com/tryy3/webbforum/fileutils"
 	"github.com/tryy3/webbforum/models"
+	"github.com/volatiletech/authboss"
 )
 
 // ProfileHandler handles the /profil page with GET requests
@@ -18,10 +18,12 @@ type ProfileHandler struct {
 	ab *authboss.Authboss
 }
 
+// NewProfileHandler creates a new profile handler
 func NewProfileHandler(ab *authboss.Authboss) http.Handler {
 	return ProfileHandler{ab}
 }
 
+// ServeHTTP retrieves profiles in the db and shows it
 func (p ProfileHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	u, ok := getUser(w, r, p.ab)
 	if !ok {
@@ -56,10 +58,12 @@ type ProfileEditHandler struct {
 	ab     *authboss.Authboss
 }
 
+// NewProfileEditHandler creates a new ProfileEditHandler
 func NewProfileEditHandler(storer models.UserStorer, ab *authboss.Authboss) ProfileEditHandler {
 	return ProfileEditHandler{storer, ab}
 }
 
+// ServeHTTP modifies a profile in the db and shows it
 func (p ProfileEditHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	u, ok := getUser(w, r, p.ab)
 	if !ok {
@@ -101,10 +105,12 @@ type ProfileUploadHandler struct {
 	ab *authboss.Authboss
 }
 
+// NewProfileUploadHandler creates a new ProfileUploadHandler
 func NewProfileUploadHandler(db *gorm.DB, ab *authboss.Authboss) ProfileUploadHandler {
 	return ProfileUploadHandler{db, ab}
 }
 
+// ServeHTTP handles uploading profile picture to the db
 func (p ProfileUploadHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	u, ok := getUser(w, r, p.ab)
 	if !ok {

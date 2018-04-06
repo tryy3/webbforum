@@ -11,8 +11,8 @@ import (
 	"github.com/apex/log"
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
-	"github.com/volatiletech/authboss"
 	"github.com/tryy3/webbforum/models"
+	"github.com/volatiletech/authboss"
 )
 
 func serveThreadsPage(db *gorm.DB, data authboss.HTMLData) (authboss.HTMLData, string) {
@@ -337,8 +337,6 @@ func (t ThreadEditHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	data = data.MergeKV("category_id", thread.Category.ID)
-
-
 
 	if thread.CreatedByID == user.ID {
 		hasPerm, err := models.HasPermission(t.Database, user, models.Permissions.EDITSELFTHREAD)

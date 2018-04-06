@@ -9,19 +9,18 @@ import (
 	"time"
 
 	"github.com/aarondl/tpl"
-	"github.com/dustin/go-humanize"
 	"github.com/justinas/nosurf"
 	"github.com/spf13/viper"
-	"github.com/volatiletech/authboss"
 	"github.com/tryy3/webbforum/models"
+	"github.com/volatiletech/authboss"
 )
 
 type translate struct {
-	Key *regexp.Regexp
+	Key   *regexp.Regexp
 	Value string
 }
 
-var translations = []translate {
+var translations = []translate{
 	{regexp.MustCompile(`invalid username and/or password`), "Ogiltigt användarnamn och/eller lösenord."},
 	{regexp.MustCompile(`Does not match password`), "Matchar inte lösenordet."},
 	{regexp.MustCompile(`Cannot be blank`), "Får inte vara tom."},
@@ -55,9 +54,10 @@ var translations = []translate {
 	{regexp.MustCompile(`You do not have permission to do this.`), "Du har inte tillräckligt med rättigheter för att göra detta."},
 }
 
+// isSameDay compares two different dates and then call if the date is the same.
 func isSameDay(a, b time.Time) bool {
-	aYear, aMonth, aDay:= a.Date()
-	bYear, bMonth, bDay:= b.Date()
+	aYear, aMonth, aDay := a.Date()
+	bYear, bMonth, bDay := b.Date()
 
 	if aYear == bYear && aMonth == bMonth && aDay == bDay {
 		return true
