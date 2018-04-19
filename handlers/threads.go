@@ -15,6 +15,7 @@ import (
 	"github.com/volatiletech/authboss"
 )
 
+//retrieves threads from the database
 func serveThreadsPage(db *gorm.DB, data authboss.HTMLData) (authboss.HTMLData, string) {
 	var threads []models.Thread
 	err := db.Find(&threads).Error
@@ -46,6 +47,7 @@ type ThreadCreateHandler struct {
 	Authboss *authboss.Authboss
 }
 
+// ServeHTTP handler for creating threads
 func (t ThreadCreateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	u, ok := getUser(w, r, t.Authboss)
 	if !ok {
@@ -195,6 +197,7 @@ type ThreadDeleteHandler struct {
 	Authboss *authboss.Authboss
 }
 
+// ServeHTTP handler for deleting threads
 func (t ThreadDeleteHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	data := LayoutData(w, r)
 
@@ -294,6 +297,7 @@ type ThreadEditHandler struct {
 	Authboss *authboss.Authboss
 }
 
+// ServeHTTP handler for editing threads
 func (t ThreadEditHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	data := LayoutData(w, r)
 
@@ -432,6 +436,7 @@ type ThreadShowHandler struct {
 	Database *gorm.DB
 }
 
+// ServeHTTP handler for showing threads
 func (t ThreadShowHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	data := LayoutData(w, r)
 
