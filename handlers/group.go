@@ -80,6 +80,8 @@ func (c GroupEditHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var group models.Group
+
+	// retrieve group id from request
 	id, errStr := getGroupID(attr)
 	if errStr != "" {
 		data, serveErr := serveAdminPage(c.Database, data)
@@ -92,6 +94,7 @@ func (c GroupEditHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	group.ID = id
 
+	// retrieve the group data from database
 	result := c.Database.First(&group)
 	if result.Error != nil || result.RecordNotFound() {
 		errStr := "tried to modify invalid group"
@@ -122,6 +125,7 @@ func (c GroupEditHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// update the group data in the database
 	err = c.Database.Model(&group).Updates(&group).Error
 	if err != nil {
 		log.WithError(err).Error("internal error when updating a group")
@@ -131,6 +135,7 @@ func (c GroupEditHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// retrieve all permissions
 	var perms []models.Permission
 	err = c.Database.Where("group_id = ?", group.ID).Find(&perms).Error
 	if err != nil {
@@ -149,6 +154,7 @@ func (c GroupEditHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	// remove permission
 	if len(deleteIDs) > 0 {
 		err = c.Database.Where("id IN (?)", deleteIDs).Delete(models.Permission{}).Error
 		if err != nil {
@@ -160,6 +166,7 @@ func (c GroupEditHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	// check if we need to add any permissions to the database
 	for perm := range attr {
 		if !strings.Contains(perm, "permission_") {
 			continue

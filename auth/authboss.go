@@ -76,7 +76,6 @@ func SetupAuthboss(storer *Storer) (*authboss.Authboss, error) {
 	}
 
 	// cookie configurations
-	// TODO: Test block key
 	cookieStore := securecookie.New(cookieKey, nil)
 	cookieManager := NewCookieManager(cookieStore, time.Duration(viper.GetInt64("cookie.expiry"))*time.Hour)
 	ab.CookieStoreMaker = cookieManager.NewCookieStorer

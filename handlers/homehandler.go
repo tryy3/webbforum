@@ -12,10 +12,12 @@ import (
 	"github.com/volatiletech/authboss"
 )
 
+// idModel struct model for ID
 type idModel struct {
 	ID uint
 }
 
+// updateAtModel struct model for id and when it was updated
 type updateAtModel struct {
 	idModel
 	UpdateAt time.Time

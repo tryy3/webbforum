@@ -15,7 +15,7 @@ import (
 	"github.com/volatiletech/authboss"
 )
 
-//retrieves threads from the database
+// serveThreadsPage retrieves threads from the database
 func serveThreadsPage(db *gorm.DB, data authboss.HTMLData) (authboss.HTMLData, string) {
 	var threads []models.Thread
 	err := db.Find(&threads).Error
@@ -42,6 +42,7 @@ func serveThreadsPage(db *gorm.DB, data authboss.HTMLData) (authboss.HTMLData, s
 	return data, ""
 }
 
+// ThreadCreateHandler is a handler when a user tries to create a thread
 type ThreadCreateHandler struct {
 	Database *gorm.DB
 	Authboss *authboss.Authboss
@@ -192,6 +193,7 @@ func (t ThreadCreateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, urlPath, http.StatusFound)
 }
 
+// ThreadDeleteHandler is a handler when a user tries to delete a thread
 type ThreadDeleteHandler struct {
 	Database *gorm.DB
 	Authboss *authboss.Authboss
@@ -292,6 +294,7 @@ func (t ThreadDeleteHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/forums/"+thread.Category.Name, http.StatusFound)
 }
 
+// ThreadEditHandler is a handler when a user tries to modify a thread
 type ThreadEditHandler struct {
 	Database *gorm.DB
 	Authboss *authboss.Authboss
@@ -432,6 +435,8 @@ func (t ThreadEditHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/forums/"+thread.Category.Name, http.StatusFound)
 }
 
+
+// ThreadShowHandler is a handler for showing a thread
 type ThreadShowHandler struct {
 	Database *gorm.DB
 }

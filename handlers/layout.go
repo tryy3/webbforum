@@ -20,6 +20,7 @@ type translate struct {
 	Value string
 }
 
+// translations a list of already translated phrases
 var translations = []translate{
 	{regexp.MustCompile(`invalid username and/or password`), "Ogiltigt användarnamn och/eller lösenord."},
 	{regexp.MustCompile(`Does not match password`), "Matchar inte lösenordet."},
