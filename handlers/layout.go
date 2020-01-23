@@ -10,8 +10,8 @@ import (
 
 	"github.com/aarondl/tpl"
 	"github.com/dustin/go-humanize"
-	"github.com/justinas/nosurf"
-	"github.com/spf13/viper"
+	//"github.com/justinas/nosurf"
+	//"github.com/spf13/viper"
 	"github.com/volatiletech/authboss"
 	"github.com/tryy3/webbforum/models"
 )
@@ -132,7 +132,7 @@ func LayoutData(w http.ResponseWriter, r *http.Request) authboss.HTMLData {
 
 // mustrender renders a template
 func mustRender(w http.ResponseWriter, r *http.Request, name string, data authboss.HTMLData) {
-	data.MergeKV(viper.GetString("xsrf.name"), nosurf.Token(r))
+	//data.MergeKV(viper.GetString("xsrf.name"), nosurf.Token(r))
 	err := Templates.Render(w, name, data)
 	if err == nil {
 		return

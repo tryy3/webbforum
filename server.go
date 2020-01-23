@@ -127,7 +127,8 @@ func StartServer(db *gorm.DB) error {
 	})
 
 	// set up the middleware chain
-	stack := alice.New(middleware.Logging, middleware.NoSurfingMiddleware, ab.ExpireMiddleware).Then(r)
+	//stack := alice.New(middleware.Logging, middleware.NoSurfingMiddleware, ab.ExpireMiddleware).Then(r)
+	stack := alice.New(middleware.Logging, ab.ExpireMiddleware).Then(r)
 
 	// create the http server
 	srv := &http.Server{

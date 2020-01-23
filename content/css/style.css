@@ -1,0 +1,535 @@
+@charset "UTF-8";
+/* CSS Document */
+@font-face {
+	font-family: FMStencil;
+	src: url(ForsvarsmaktenSans-Stencil.ttf);
+}
+	
+@font-face {
+	font-family: FMCondensed;
+	src: url(ForsvarsmaktenSans-Condensed.ttf);
+}
+
+@font-face {
+    font-family: FMRegular;
+    src: url(ForsvarsmaktenSans-Regular.ttf);
+}
+
+body {
+	background-image: url(/images/M90_ASKA_M.jpg);
+	background-size:cover;
+}
+
+h1 {
+	font-family: FMStencil;
+	font-size:3em;
+	color: white;
+	text-align:center;
+}
+
+.forgot,
+.remember,
+.profileWrapper  .profile{
+	font-family: FMRegular;
+	font-size:1em;
+	color: grey;
+	margin-top:5px;
+}
+
+.forgotWrapper,
+.profileWrapper {
+    padding: 15px;
+}
+
+.profileWrapper {
+    text-align: center;
+}
+
+input[type=text],
+input[type=password] {
+    background-color: rgba(255,255,255, 0.70);
+    width: 400px;
+    height:50px;
+    padding: 12px 20px;
+    margin: 10px auto 5px;
+    border-radius:7px;
+    box-sizing: border-box;
+}
+
+.box .input-title,
+.new-post .input-title,
+.settings .input-title,
+.category-form .input-title,
+.group-form .input-title {
+	color: white;
+	font-family: FMRegular;
+	font-size: 1.5em;
+	text-align: left;
+	padding-left: 20px;
+    padding-top: 15px;
+	float: left;
+}
+
+.box .box-title {
+    color: white;
+    font-family: FMCondensed;
+    font-size: 3em;
+    text-align: center;
+    padding-bottom: 20px;
+    text-decoration: underline;
+}
+
+.has-error input[type=text],
+.has-error input[type=password] {
+    border: 2px solid #a94442;
+}
+
+.has-error .error-block {
+    color: #a94442;
+    text-align: left;
+    padding-left: 25px;
+    font-size: 0.85em;
+}
+
+.box {
+	background-color: rgba(0,0,0,0.65);
+	width: 450px;
+	margin:50px auto;
+	border-radius: 15px; 
+	padding-top: 20px;
+	text-align:center;
+}
+
+.btnWrapper {
+    padding-top: 15px;
+}
+
+.btn {
+    color: #cfcfcf;
+    font-family: FMCondensed;
+    border-radius: 15px;
+    background-color: rgba(150, 150, 150, 0.7);
+    font-size: 1.5em;
+    padding: 5px 45px 5px 45px;
+    text-decoration: none;
+    cursor: pointer;
+    border: 2px outset rgba(35, 35, 35, 0.7);
+}
+
+.btn:hover {
+    background: rgba(200, 200, 200, 0.7);
+    text-decoration: none;
+}
+
+.rememberWrapper {
+    height: 40px;
+}
+
+.rememberCheckbox {
+    width: 18px;
+    position: relative;
+    margin-right: 10px;
+}
+
+.rememberCheckbox label {
+    cursor: pointer;
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    top: 0;
+    left: 0;
+    background: #eee;
+    border: 1px solid #ddd;
+}
+
+.rememberCheckbox label:after {
+    opacity: 0.2;
+    content: '';
+    position: absolute;
+    width: 9px;
+    height: 2px;
+    background: transparent;
+    top: 6px;
+    left: 4px;
+    border: 3px solid #333;
+    border-top: none;
+    border-right: none;
+    transform: rotate(-45deg);
+}
+
+.rememberCheckbox label:hover::after {
+    opacity: 0.5;
+}
+
+.rememberCheckbox input[type=checkbox]:checked + label:after {
+    opacity: 1;
+}
+
+.alert {
+    width: 70%;
+    padding: 15px;
+    margin: 0 auto 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.alert-danger {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+
+.alert-success {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+}
+
+nav.navbar {
+    background: rgba(35, 35, 35, 0.7);
+    display: grid;
+    grid-template-columns: auto auto auto;
+    padding: 10px 0 10px 0;
+}
+
+nav.navbar .navbar-logo {
+    width: 159px;
+    height: 50px;
+    margin-left: 20%;
+}
+
+nav.navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+nav.navbar li a {
+    display: block;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-family: FMCondensed;
+    font-size: 1em;
+    color: #ababab;
+}
+
+nav.navbar .navbar-middle {
+    margin: 0 auto;
+}
+
+nav.navbar .navbar-middle li {
+    float: left;
+}
+
+nav.navbar .navbar-right {
+    margin-right: 20%;
+}
+
+nav.navbar .navbar-right li {
+    float: right;
+}
+
+.page {
+    width: 80%;
+    margin: 70px auto 0;
+}
+
+.page-body {
+    background: rgba(44, 44, 44, 0.9);
+}
+
+.page-toolbar {
+    display: flex;
+    justify-content: end;
+    margin-bottom: 5px;
+}
+
+.page-toolbar form {
+    display: flex;
+}
+
+.page-toolbar input[type=text] {
+    margin: 2px 3px;
+    border-radius: 4px;
+    height: 25px;
+    padding: 0 5px;
+    font-family: FMCondensed;
+    font-size: 0.85em;
+}
+
+.page-toolbar a,
+.page-toolbar input[type=submit] {
+    margin: 2px 3px;
+    border-radius: 4px;
+    height: 25px;
+    padding: 4px 5px;
+    font-family: FMCondensed;
+    font-size: 0.85em;
+    color: white;
+    background-color: #898989;
+    border: 2px solid #5d5d5d;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 0 5px -1px rgba(0,0,0,0.2);
+    outline: none;
+    box-sizing: border-box;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.page-toolbar a:hover,
+.page-toolbar input[type=submit]:hover {
+    background-color: #777;
+}
+
+.page h1 {
+    text-decoration: underline;
+}
+
+.page h3 {
+    font-family: FMStencil;
+    font-size: 1.7em;
+    color: grey;
+    text-align: center;
+}
+
+.category-panel,
+.post-panel {
+    width: 85%;
+    margin: 0 auto;
+    padding: 20px 0;
+    border-bottom: 1px solid #000;
+    display: grid;
+    grid-template-columns: 50px 60% 15% auto;
+}
+
+.category-panel:last-child {
+    border-bottom: none;
+}
+
+.category-panel .icon {
+    width: 25px;
+    height: 25px;
+    font-size: 25px;
+}
+
+.category-panel .title a {
+    font-family: FMCondensed;
+    color: #bdbdbd;
+}
+
+.category-panel .body .title a {
+    font-family: FMRegular;
+    color: #bdbdbd;
+    font-size: 1.7em;
+}
+
+.category-panel .description,
+.category-panel .description a {
+    font-family: FMRegular;
+    color: #4d4d4d;
+    font-size: 0.9em;
+}
+
+.category-panel .information {
+    font-family: FMRegular;
+    color: #656565;
+    font-size: 0.9em;
+}
+
+.category-panel .status .description,
+.category-panel .status .description a {
+    font-size: 12px;
+}
+
+.category-panel .status .title {
+    font-family: FMRegular;
+    color: #bdbdbd;
+}
+
+.post-panel {
+    grid-template-columns: 15% auto;
+    border-bottom: 1px solid black;
+    border-top: 1px solid black;
+}
+
+.post-panel:first-of-type {
+    border-top: 2px solid black;
+}
+
+.post-panel .user {
+    padding: 10px;
+}
+
+.post-panel .user .profile a {
+    font-family: FMCondensed;
+    color: #bdbdbd;
+    font-size: 1.3em;
+}
+
+.post-panel .user div {
+    font-family: FMCondensed;
+    color: #4d4d4d;
+    font-size: 0.9em;
+    margin: 3px 0;
+}
+
+.post-panel .user .picture {
+    border-top: none;
+    padding: 0;
+}
+
+.post-panel .user .picture img {
+    width: 100px;
+    height: 100px;
+    margin-top: 3px;
+}
+
+.post-panel .comment .message {
+    font-family: FMRegular;
+    color: #9b9696;
+    font-size: 1em;
+    padding: 5px 10px;
+}
+
+.post-panel .comment .status {
+    font-family: FMCondensed;
+    color: #9b9696;
+    font-size: 1em;
+    padding: 5px 10px;
+    border-bottom: 1px solid black;
+    display: flex;
+    justify-content: space-between;
+}
+
+.new-post,
+.settings,
+.picture,
+.category-form,
+.group-form {
+    width: 85%;
+    margin: 0 auto;
+    padding: 20px 0;
+    border-top: 1px solid black;
+}
+
+.new-post form,
+.settings form,
+.category-form form,
+.group-form form {
+    margin: 0 20px;
+}
+
+.new-post .buttonwrap,
+.settings .buttonwrap,
+.picture .buttonwrap,
+.category-form .buttonwrap,
+.group-form .buttonwrap {
+    display: grid;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.new-post .input-title,
+.settings .input-title,
+.category-form .input-title,
+.group-form .input-title {
+    width: 100%;
+    padding-left: 0;
+}
+
+.new-post input[type=text],
+.settings input[type=text],
+.category-form input[type=text],
+.group-form input[type=text] {
+    width: 70%;
+    padding: 0;
+    margin: 0;
+    height: 35px;
+    border-radius: 2px;
+}
+
+.settings form,
+.picture form {
+    width: 60%;
+    margin: 0 auto;
+}
+
+.settings input[type=text] {
+    width: 100%;
+}
+
+.picture {
+    padding: 30px;
+}
+
+.inputwrap {
+    display: flex;
+    justify-content: center;
+    padding: 5px;
+}
+
+.inputfile {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+.inputfile + label {
+    color: white;
+    display: inline-block;
+    cursor: pointer;
+    border: 1px solid white;
+    padding: 5px 10px;
+    font-size: 1em;
+    font-family: FMCondensed;
+    background: rgba(150, 150, 150, 0.7);
+}
+
+.inputfile:focus + label,
+.inputfile + label:hover {
+    background: rgba(200, 200, 200, 0.7);
+}
+
+.inputfile:focus + label,
+.inputfile.has-focus + label {
+    outline: 1px dotted #000;
+    outline: -webkit-focus-ring-color auto 5px;
+}
+
+.profile-body {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 50px;
+    font-family: FMRegular;
+    font-size: 1em;
+    color: gray;
+}
+
+.profile-body .left,
+.profile-body .right {
+    margin: 10px;
+}
+
+.recover-buttons {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.category-form form,
+.group-form .form {
+    width: 60%;
+    margin: 0 auto;
+}
+
+.permissionWrapper {
+    display: flex;
+    justify-content: center;
+    height: 40px;
+}

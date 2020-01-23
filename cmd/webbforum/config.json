@@ -1,0 +1,51 @@
+{
+  "content": {
+    "base": "content",
+    "css": {
+      "folder": "css"
+    },
+    "image": {
+      "folder": "image",
+      "size": 10485760
+    },
+    "js": {
+      "folder": "js"
+    },
+    "tmp": "tmp"
+  },
+  "cookie": {
+    "expiry": 8760,
+    "key": "c2T0KDfvThmmjr9a2h+ZAc6d3/uEIjEcVVuLvrxLvumPOa7vu2JhL5NoagnMQj2Wdp162Y6YSUEDwv2PCH2CgQ=="
+  },
+  "database": {
+    "host": "127.0.0.1",
+    "name": "webbforum",
+    "password": "",
+    "port": 3306,
+    "username": "root"
+  },
+  "http": {
+    "host": "127.0.0.1",
+    "port": 80
+  },
+  "session": {
+    "key": "MIyf89qQiw8+Q3D3Vyic07bU0xPAqe+AXaeKnAAbx8a9DYomO06E9p+mE6WAtuWr+oABuVngVAxchXzNIsSnYg==",
+    "name": "ab_webbforum"
+  },
+  "smtp": {
+    "email": "webbforum@gmail.com",
+    "host": "smtp.gmail.com",
+    "identity": "",
+    "name": "Webbforum Administrator",
+    "password": "example_password",
+    "port": 587,
+    "username": "example@gmail.com"
+  },
+  "views": {
+    "folder": "views",
+    "partials": "views/partials"
+  },
+  "xsrf": {
+    "name": "csrf_token"
+  }
+}

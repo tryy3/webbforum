@@ -1,0 +1,37 @@
+{
+  "cookie": {
+    "expiry": 8760,
+    "key": "fwd2XkvSfkG+r7t/9koXday4Smdlzt2yYsAY2baeChI4aB5PqLQQ/HGvETfzAygamW4o3tBX/R24R7Zx51p6MA=="
+  },
+  "database": {
+    "host": "127.0.0.1",
+    "name": "webbforum",
+    "password": "",
+    "port": 3306,
+    "username": "root"
+  },
+  "http": {
+    "host": "127.0.0.1",
+    "port": 8080
+  },
+  "session": {
+    "key": "Qq0XcOgpIsTLkXvxS8vyRM4voJ3+irHesIfbBIOYVtib7FJr0/i9XeBGcwUAjHWZtka9aP0O28bvdRye14HYxg==",
+    "name": "ab_webbforum"
+  },
+  "smtp": {
+    "email": "example@gmail.com",
+    "host": "smtp.gmail.com",
+    "port": 587,
+    "identity": "",
+    "name": "Webbforum Administrator",
+    "password": "123123123",
+    "username": "example@gmail.com"
+  },
+  "views": {
+    "folder": "views",
+    "partials": "views/partials"
+  },
+  "xsrf": {
+    "name": "csrf_token"
+  }
+}

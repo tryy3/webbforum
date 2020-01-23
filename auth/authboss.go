@@ -12,7 +12,7 @@ import (
 
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
-	"github.com/justinas/nosurf"
+	//"github.com/justinas/nosurf"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 	"github.com/volatiletech/authboss"
@@ -60,7 +60,8 @@ func SetupAuthboss(storer *Storer) (*authboss.Authboss, error) {
 	// xsrf protection
 	ab.XSRFName = viper.GetString("xsrf.name")
 	ab.XSRFMaker = func(_ http.ResponseWriter, r *http.Request) string {
-		return nosurf.Token(r)
+		return ""
+		//return nosurf.Token(r)
 	}
 
 	// generate cookie key
