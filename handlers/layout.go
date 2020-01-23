@@ -12,6 +12,7 @@ import (
 	"github.com/dustin/go-humanize"
 	//"github.com/justinas/nosurf"
 	//"github.com/spf13/viper"
+	"github.com/tryy3/webbforum/models"
 	"github.com/volatiletech/authboss"
 )
 
