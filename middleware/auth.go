@@ -13,10 +13,12 @@ type LoggedInProtector struct {
 	ab *authboss.Authboss
 }
 
+// LoggedInProtect is a wrapper for LoggedInProtect
 func LoggedInProtect(h http.Handler, ab *authboss.Authboss) http.Handler {
 	return LoggedInProtector{h, ab}
 }
 
+// ServeHTTP checks if a user is logged in or not
 func (p LoggedInProtector) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	u, err := p.ab.CurrentUser(w, r)
 	if err != nil {

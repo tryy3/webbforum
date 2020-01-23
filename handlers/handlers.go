@@ -14,6 +14,7 @@ import (
 	"github.com/volatiletech/authboss"
 )
 
+// badRequest checks if there is an error, returns a bad request
 func badRequest(w http.ResponseWriter, err error) bool {
 	if err == nil {
 		return false
@@ -26,6 +27,7 @@ func badRequest(w http.ResponseWriter, err error) bool {
 	return true
 }
 
+// getUser retrieves a user from the request
 func getUser(w http.ResponseWriter, r *http.Request, ab *authboss.Authboss) (interface{}, bool) {
 	u, err := ab.CurrentUser(w, r)
 	if err != nil {
@@ -40,6 +42,7 @@ func getUser(w http.ResponseWriter, r *http.Request, ab *authboss.Authboss) (int
 	return u, true
 }
 
+// getCategoryID retrieves a category ID from the request
 func getCategoryID(attr authboss.Attributes) (uint, string) {
 	idStr, ok := attr.String("category_id")
 	if !ok {
@@ -54,6 +57,7 @@ func getCategoryID(attr authboss.Attributes) (uint, string) {
 	return uint(id), ""
 }
 
+// getGroupID retrieves group ID from the request
 func getGroupID(attr authboss.Attributes) (uint, string) {
 	idStr, ok := attr.String("group_id")
 	if !ok {
@@ -68,6 +72,7 @@ func getGroupID(attr authboss.Attributes) (uint, string) {
 	return uint(id), ""
 }
 
+// getThreadID retrieves thread ID from the request
 func getThreadID(attr authboss.Attributes) (uint, string) {
 	idStr, ok := attr.String("thread_id")
 	if !ok {
@@ -82,6 +87,7 @@ func getThreadID(attr authboss.Attributes) (uint, string) {
 	return uint(id), ""
 }
 
+// urlEncoded tries to parse a URL
 func urlEncoded(str string) (string, error) {
 	u, err := url.Parse(str)
 	if err != nil {
@@ -90,12 +96,13 @@ func urlEncoded(str string) (string, error) {
 	return u.String(), nil
 }
 
-
+// BBCodeConverter converts BB code to HTML
 type BBCodeConverter struct {
 	conv      *bbConvert.Converter
 	emoticons map[string]string
 }
 
+// Convert converts to BB code to HTML
 func (b BBCodeConverter) Convert(str string) template.HTML {
 	c := b.conv.Convert(str)
 	c = strings.Replace(c, "\n", "<br />", -1)
@@ -115,6 +122,7 @@ func (b BBCodeConverter) Convert(str string) template.HTML {
 	return template.HTML(c)
 }
 
+// NewBBCodeConverter creates a new BBCodeConverter
 func NewBBCodeConverter() *BBCodeConverter {
 	var htmlConv bbConvert.HTMLConverter
 	htmlConv.ImplementDefaults()

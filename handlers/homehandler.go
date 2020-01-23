@@ -8,19 +8,22 @@ import (
 
 	"github.com/apex/log"
 	"github.com/jinzhu/gorm"
-	"github.com/volatiletech/authboss"
 	"github.com/tryy3/webbforum/models"
+	"github.com/volatiletech/authboss"
 )
 
+// idModel struct model for ID
 type idModel struct {
 	ID uint
 }
 
+// updateAtModel struct model for id and when it was updated
 type updateAtModel struct {
 	idModel
 	UpdateAt time.Time
 }
 
+// serveHomePage takes care of retriving the general data that home pages need
 func serveHomePage(db *gorm.DB, data authboss.HTMLData) (authboss.HTMLData, string) {
 	var categories []models.Category
 	err := db.Find(&categories).Error
@@ -78,6 +81,7 @@ type HomeHandler struct {
 	Database *gorm.DB
 }
 
+// ServeHTTP serves the homepage
 func (h HomeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	data := LayoutData(w, r)
 	data, err := serveHomePage(h.Database, data)

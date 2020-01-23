@@ -12,10 +12,12 @@ type MemberHandler struct {
 	store models.UserStorer
 }
 
+// NewMemberHandler creates a new member handler
 func NewMemberHandler(store models.UserStorer) http.Handler {
 	return MemberHandler{store}
 }
 
+// ServeHTTP retrieves data regarding a member and serves it
 func (a MemberHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	data := LayoutData(w, r)
 	username, ok := mux.Vars(r)["username"]

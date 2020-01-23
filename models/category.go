@@ -2,6 +2,7 @@ package models
 
 import "time"
 
+// Category is the database model for categories
 type Category struct {
 	// General information
 	ID          uint `gorm:"primary_key"`

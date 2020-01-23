@@ -13,7 +13,7 @@ import (
 	"github.com/tryy3/webbforum/models"
 )
 
-// WriteTempFile attempst to write the content of reader into a temporary file
+// WriteTempFile attempts to write the content of reader into a temporary file
 // returns a base64Hash of the data written, the size of the file and the location of the file
 func WriteTempFile(reader io.Reader, maxFileSize int64, basePath string) (base64Hash string, size int64, path string, err error) {
 	size = -1

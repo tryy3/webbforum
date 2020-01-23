@@ -7,14 +7,16 @@ import (
 	"github.com/apex/log"
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
-	"github.com/volatiletech/authboss"
 	"github.com/tryy3/webbforum/models"
+	"github.com/volatiletech/authboss"
 )
 
+// CategoryCreateHandler creates a handler for creating categories
 type CategoryCreateHandler struct {
 	Database *gorm.DB
 }
 
+// ServeHTTP handle creating new categories
 func (c CategoryCreateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	data := LayoutData(w, r)
 
@@ -58,10 +60,12 @@ func (c CategoryCreateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request)
 	http.Redirect(w, r, "/admin", http.StatusFound)
 }
 
+// CategoryEditHandler edits the category in the database
 type CategoryEditHandler struct {
 	Database *gorm.DB
 }
 
+// ServeHTTP handles editing category.
 func (c CategoryEditHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	data := LayoutData(w, r)
 
@@ -129,10 +133,12 @@ func (c CategoryEditHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/admin", http.StatusFound)
 }
 
+// CategoryDeleteHandler removes category from database
 type CategoryDeleteHandler struct {
 	Database *gorm.DB
 }
 
+// ServeHTTP handles deleting the category.
 func (c CategoryDeleteHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	data := LayoutData(w, r)
 

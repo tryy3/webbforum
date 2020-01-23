@@ -11,10 +11,11 @@ import (
 	"github.com/apex/log"
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
-	"github.com/volatiletech/authboss"
 	"github.com/tryy3/webbforum/models"
+	"github.com/volatiletech/authboss"
 )
 
+// serveThreadsPage retrieves threads from the database
 func serveThreadsPage(db *gorm.DB, data authboss.HTMLData) (authboss.HTMLData, string) {
 	var threads []models.Thread
 	err := db.Find(&threads).Error
@@ -41,11 +42,13 @@ func serveThreadsPage(db *gorm.DB, data authboss.HTMLData) (authboss.HTMLData, s
 	return data, ""
 }
 
+// ThreadCreateHandler is a handler when a user tries to create a thread
 type ThreadCreateHandler struct {
 	Database *gorm.DB
 	Authboss *authboss.Authboss
 }
 
+// ServeHTTP handler for creating threads
 func (t ThreadCreateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	u, ok := getUser(w, r, t.Authboss)
 	if !ok {
@@ -190,11 +193,13 @@ func (t ThreadCreateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, urlPath, http.StatusFound)
 }
 
+// ThreadDeleteHandler is a handler when a user tries to delete a thread
 type ThreadDeleteHandler struct {
 	Database *gorm.DB
 	Authboss *authboss.Authboss
 }
 
+// ServeHTTP handler for deleting threads
 func (t ThreadDeleteHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	data := LayoutData(w, r)
 
@@ -289,11 +294,13 @@ func (t ThreadDeleteHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/forums/"+thread.Category.Name, http.StatusFound)
 }
 
+// ThreadEditHandler is a handler when a user tries to modify a thread
 type ThreadEditHandler struct {
 	Database *gorm.DB
 	Authboss *authboss.Authboss
 }
 
+// ServeHTTP handler for editing threads
 func (t ThreadEditHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	data := LayoutData(w, r)
 
@@ -337,8 +344,6 @@ func (t ThreadEditHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	data = data.MergeKV("category_id", thread.Category.ID)
-
-
 
 	if thread.CreatedByID == user.ID {
 		hasPerm, err := models.HasPermission(t.Database, user, models.Permissions.EDITSELFTHREAD)
@@ -430,10 +435,13 @@ func (t ThreadEditHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/forums/"+thread.Category.Name, http.StatusFound)
 }
 
+
+// ThreadShowHandler is a handler for showing a thread
 type ThreadShowHandler struct {
 	Database *gorm.DB
 }
 
+// ServeHTTP handler for showing threads
 func (t ThreadShowHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	data := LayoutData(w, r)
 

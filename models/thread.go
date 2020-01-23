@@ -2,6 +2,7 @@ package models
 
 import "time"
 
+// Thread is the database model for threads
 type Thread struct {
 	// General information
 	ID   uint `gorm:"primary_key"`

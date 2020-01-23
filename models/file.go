@@ -2,6 +2,7 @@ package models
 
 import "time"
 
+// File is the database model for file content
 type File struct {
 	// General information
 	ID            uint `primary_key`

@@ -52,6 +52,7 @@ func Logging(h http.Handler) http.Handler {
 	})
 }
 
+// makeLogger is a wrapper for loggingResponseWriter
 func makeLogger(w http.ResponseWriter) loggingResponseWriter {
 	var logger loggingResponseWriter = &responseLogger{w: w, status: http.StatusOK}
 	if _, ok := w.(http.Hijacker); ok {
